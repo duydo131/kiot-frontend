@@ -1,0 +1,79 @@
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+// material
+import { Container, Stack, Typography, Button } from '@mui/material';
+// components
+import Page from '../components/Page';
+import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
+import { TerminalList } from '../sections/@dashboard/terminals';
+
+// mock
+import PRODUCTS from '../_mock/products';
+import callApiHttp from '../utils/api';
+import { actEnableToast } from 'src/actions/index';
+
+// ----------------------------------------------------------------------
+
+export default function Terminals() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const toast = (message) => dispatch(actEnableToast(message));
+  const [openFilter, setOpenFilter] = useState(false);
+  const [terminals, setTerminals] = useState([]);
+
+  const fetchTerminals = async () => {
+    try {
+      const res = await callApiHttp({
+        url: '/terminals/all',
+        method: 'GET',
+      });
+      const { data } = res?.data;
+      setTerminals(data);
+    } catch (e) {
+      console.log('e', e);
+      let err = e?.response?.data?.data;
+      let errText = 'Lỗi hệ thống';
+      if (typeof err === 'object') {
+        errText = '';
+        for (let key in err) {
+          errText += `${key} : ${err[key]} \n`;
+        }
+      }
+      toast(errText);
+    }
+  };
+
+  useEffect(() => {
+    fetchTerminals();
+  }, []);
+
+  const handleOpenFilter = () => {
+    setOpenFilter(true);
+  };
+
+  const handleCloseFilter = () => {
+    setOpenFilter(false);
+  };
+
+  const handleNewTerminal = () => {
+    navigate('/dashboard/terminals/create', { replace: true });
+  };
+
+  return (
+    <Page title="Gian hàng">
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Typography variant="h4" sx={{ mb: 5 }}>
+            Gian hàng
+          </Typography>
+          <Button variant="contained" onClick={handleNewTerminal}>
+            Tạo gian hàng mới
+          </Button>
+        </Stack>
+
+        <TerminalList terminals={terminals} />
+      </Container>
+    </Page>
+  );
+}
