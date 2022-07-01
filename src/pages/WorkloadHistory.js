@@ -1,14 +1,16 @@
-import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Container, Typography, Button } from '@mui/material';
+import { Card, Stack, Container, Typography } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
 import Page from '../components/Page';
-import Logo from '../components/Logo';
+import callApiHttp from '../utils/api';
 // sections
-import { TerminalDetailForm } from '../sections/@dashboard/terminals';
+import { WorkloadHistoryList } from '../sections/@dashboard/products';
 
 // ----------------------------------------------------------------------
 
@@ -44,9 +46,9 @@ const SectionStyle = styled(Card)(({ theme }) => ({
 }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
-  maxWidth: 480,
+  maxWidth: 1200,
   margin: 'auto',
-  marginTop: '-10%',
+  marginTop: '-12%',
   minHeight: '100vh',
   display: 'flex',
   justifyContent: 'center',
@@ -56,40 +58,52 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function TerminalDetail() {
-  const navigate = useNavigate();
-
+export default function WorkloadHistoryDetail() {
   const smUp = useResponsive('up', 'sm');
 
   const mdUp = useResponsive('up', 'md');
 
-  const { id: terminalId } = useParams();
+  const [workloads, setWorkloads] = useState([]);
 
-  const storeTerminalId = (id) => {
-    localStorage.setItem('terminalId', id)
-  }
-
-  const handleNewProduct = () => {
-    storeTerminalId(terminalId);
-    navigate('/dashboard/products/create', { replace: true });
+  const fetchWorkloads = async () => {
+    try {
+      const res = await callApiHttp({
+        url: '/workload',
+        method: 'GET',
+      });
+      const { results } = res?.data?.data;
+      setWorkloads(results);
+    } catch (e) {
+      console.log('e', e);
+      let err = e?.response?.data?.data;
+      let errText = 'Lỗi hệ thống';
+      if (typeof err === 'object') {
+        errText = '';
+        for (let key in err) {
+          errText += `${key} : ${err[key]} \n`;
+        }
+      }
+      toast(errText);
+    }
   };
 
+  useEffect(() => {
+    fetchWorkloads();
+  }, []);
+
   return (
-    <Page title="Thông tin gian hàng">
+    <Page title="Lịch sử Import">
       <RootStyle>
         <HeaderStyle>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="h4">Chi tiết gian hàng</Typography>
-            <Stack alignItems="center" justifyContent="space-between" ml={40}>
-              <Button variant="contained" onClick={handleNewProduct}>
-                Thêm sản phẩm mới
-              </Button>
-            </Stack>
+            <Typography variant="h4">
+              Lịch sử import
+            </Typography>
           </Stack>
         </HeaderStyle>
         <Container>
           <ContentStyle>
-            <TerminalDetailForm id={terminalId} />
+            <WorkloadHistoryList workloads={workloads}/>
           </ContentStyle>
         </Container>
       </RootStyle>

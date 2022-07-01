@@ -15,8 +15,6 @@ import Toast from './components/toast/Toast'
 export default function App() {
   const isLoggedIn = useSelector(state => state.auth);
 
-  console.log("isLoggedIn", isLoggedIn)
-
   return (
     <ThemeProvider>
       <ScrollToTop />

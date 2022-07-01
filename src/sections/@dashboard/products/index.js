@@ -5,3 +5,5 @@ export { default as ProductCartWidget } from './ProductCartWidget';
 export { default as ProductFilterSidebar } from './ProductFilterSidebar';
 export { default as ProductDetailForm } from './ProductDetailForm';
 export { default as ProductCreateForm } from './ProductCreateForm';
+export { default as ImportProductCard } from './ImportProductCard';
+export { default as WorkloadHistoryList } from './WorkloadHistoryList';

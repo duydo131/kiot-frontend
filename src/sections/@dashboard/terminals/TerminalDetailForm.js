@@ -43,11 +43,11 @@ const columns = [
       </strong>
     ),
   },
-  { field: 'code', headerName: 'Mã', width: 250 },
+  { field: 'code', headerName: 'Mã', width: 240 },
   { 
     field: 'sku', 
     headerName: 'Sku', 
-    width: 90,
+    width: 100,
   },
   { 
     field: 'is_active', 

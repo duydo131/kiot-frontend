@@ -10,7 +10,6 @@ function SlideTransition(props) {
 export default function Toast() {
   const dispatch = useDispatch();
   var toast = useSelector((state) => state.toast);
-  console.log("toast", toast)
 
   const [open, setOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');

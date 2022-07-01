@@ -16,13 +16,14 @@ import DashboardApp from './pages/DashboardApp';
 import TerminalDetail from './pages/TerminalDetail';
 import ProductDetail from './pages/ProductDetail';
 import ProductCreate from './pages/ProductCreate';
+import ImportProduct from './pages/ImportProduct';
+import WorkloadHistory from './pages/WorkloadHistory';
 
 
 // ----------------------------------------------------------------------
 
 export default function Router({isLoggedIn}) {
 
-  console.log("isLoggedIninRote", isLoggedIn)
 
   return useRoutes([
     {
@@ -34,10 +35,11 @@ export default function Router({isLoggedIn}) {
         { path: 'products', element: <Products /> },
         { path: 'products/:id', element: <ProductDetail /> },
         { path: 'products/create', element: <ProductCreate /> },
+        { path: 'import-product', element: <ImportProduct /> },
+        { path: 'import-product/history', element: <WorkloadHistory /> },
         { path: 'terminals', element: <Terminals /> },
         { path: 'terminals/create', element: <TerminalCreate /> },
-        { path: 'terminals/:id', element: <TerminalDetail /> },
-        { path: 'payment', element: <Payment /> },
+        { path: 'terminals/:id', element: <TerminalDetail /> }
       ],
     },
     {

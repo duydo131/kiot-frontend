@@ -7,8 +7,8 @@ export default function Image({link, alt}) {
     <Box
       component="img"
       sx={{
-        height: 233,
-        width: 350,
+        height: 250,
+        width: 400,
         maxHeight: { xs: 350, md: 267 },
         maxWidth: { xs: 350, md: 250 },
       }}

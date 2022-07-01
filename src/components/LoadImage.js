@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 
 
-export default function ImageUpload({selectedFile, setSelectedFile, preview, setPreview, style}){
+export default function ImageUpload({selectedFile, setSelectedFile, style, show=true}){
+  const [preview, setPreview] = useState();
+
   // create a preview as a side effect, whenever selected file is changed
   useEffect(() => {
     if (!selectedFile) {
@@ -29,7 +31,7 @@ export default function ImageUpload({selectedFile, setSelectedFile, preview, set
   return (
     <div>
       <input type="file" onChange={onSelectFile} style={style}/>
-      {selectedFile && <img src={preview} />}
+      {show && selectedFile && <img src={preview} />}
     </div>
   );
 };

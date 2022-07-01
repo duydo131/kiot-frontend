@@ -51,7 +51,6 @@ export default function TerminalCreateForm() {
       type_time_open: openNow ? "NOW" : "AFTER",
       time_open: formatDate(timeOpen)
     };
-    console.log("payload", payload)
     return await callApiHttp({
       url: '/terminals/register',
       method: 'POST',
@@ -70,9 +69,7 @@ export default function TerminalCreateForm() {
     onSubmit: (values) => {
       Promise.all([register(values)])
         .then((res) => {
-          console.log(res)
           const {data} = res[0]?.data
-          console.log("data", data)
           infoPayment(data.terminal.id, data.total_price, 'REGISTER_TERMINAL', {})
           navigate('/payment', { replace: true });
         })

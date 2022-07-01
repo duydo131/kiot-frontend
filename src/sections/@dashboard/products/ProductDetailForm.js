@@ -43,7 +43,6 @@ export default function ProductDetailForm({ id }) {
     Promise.all([fetchProductDetail(id)])
       .then((res) => {
         const { data } = res[0]?.data;
-        console.log('product', data);
         setProduct(data);
       })
       .catch((e) => {

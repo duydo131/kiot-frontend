@@ -48,14 +48,6 @@ export default function Terminals() {
     fetchTerminals();
   }, []);
 
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
-  };
-
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
-
   const handleNewTerminal = () => {
     navigate('/dashboard/terminals/create', { replace: true });
   };

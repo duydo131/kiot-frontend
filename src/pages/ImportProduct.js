@@ -8,7 +8,7 @@ import useResponsive from '../hooks/useResponsive';
 import Page from '../components/Page';
 import Logo from '../components/Logo';
 // sections
-import { TerminalDetailForm } from '../sections/@dashboard/terminals';
+import { ImportProductCard } from '../sections/@dashboard/products';
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ const SectionStyle = styled(Card)(({ theme }) => ({
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
   margin: 'auto',
-  marginTop: '-10%',
+  marginTop: '-20%',
   minHeight: '100vh',
   display: 'flex',
   justifyContent: 'center',
@@ -56,40 +56,33 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function TerminalDetail() {
+export default function ImportProduct() {
   const navigate = useNavigate();
 
   const smUp = useResponsive('up', 'sm');
 
   const mdUp = useResponsive('up', 'md');
 
-  const { id: terminalId } = useParams();
-
-  const storeTerminalId = (id) => {
-    localStorage.setItem('terminalId', id)
-  }
-
-  const handleNewProduct = () => {
-    storeTerminalId(terminalId);
-    navigate('/dashboard/products/create', { replace: true });
+  const handleViewHistoryImport = () => {
+    navigate('/dashboard/import-product/history', { replace: true });
   };
 
   return (
-    <Page title="Thông tin gian hàng">
+    <Page title="Import sản phẩm">
       <RootStyle>
         <HeaderStyle>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="h4">Chi tiết gian hàng</Typography>
+            <Typography variant="h4">Thông tin import sản phẩm</Typography>
             <Stack alignItems="center" justifyContent="space-between" ml={40}>
-              <Button variant="contained" onClick={handleNewProduct}>
-                Thêm sản phẩm mới
+              <Button variant="contained" onClick={handleViewHistoryImport}>
+                Xem lịch sử import
               </Button>
             </Stack>
           </Stack>
         </HeaderStyle>
         <Container>
           <ContentStyle>
-            <TerminalDetailForm id={terminalId} />
+            <ImportProductCard />
           </ContentStyle>
         </Container>
       </RootStyle>

@@ -23,10 +23,7 @@ export default function ProductCreateForm() {
 
   const [terminalId, setTerminalId] = useState(null);
   const [terminal, setTerminal] = useState(null);
-  const [preview, setPreview] = useState();
   const [selectedFile, setSelectedFile] = useState();
-
-  console.log('preview', preview);
 
   const fetchTerminalDetail = async (id) => {
     return await callApiHttp({
@@ -68,16 +65,19 @@ export default function ProductCreateForm() {
 
   const addProduct = async (values) => {
     try{
-      const formData = new FormData();
-      formData.append('file', selectedFile);
-      const upload  = await callApiHttp({
-        baseUrl: 'http://localhost:8080',
-        url: '/upload',
-        method: 'POST',
-        data: formData,
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      console.log('upload', upload);
+      let upload = null
+      if (selectedFile !== undefined){
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        upload  = await callApiHttp({
+          baseUrl: 'http://localhost:8080',
+          url: '/upload',
+          method: 'POST',
+          data: formData,
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        console.log('upload', upload);
+      }
 
       var payload = {
         name: values['name'],
@@ -87,7 +87,6 @@ export default function ProductCreateForm() {
         terminal_code: terminal.code,
         image: upload?.data?.filepath
       };
-      console.log('payload', payload);
       const res  = await callApiHttp({
         url: '/products',
         method: 'POST',
@@ -107,6 +106,7 @@ export default function ProductCreateForm() {
         }
       }
       toast(errText);
+      setLoading(false)
       navigate('/dashboard/products/create', { replace: true });
     }
   };
@@ -125,6 +125,10 @@ export default function ProductCreateForm() {
   });
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  const [loading, setLoading] = useState(isSubmitting)
+  useEffect(() => {
+    setLoading(isSubmitting)
+  }, [isSubmitting])
 
   return (
     <FormikProvider value={formik}>
@@ -171,15 +175,13 @@ export default function ProductCreateForm() {
           <Stack direction="row" alignItems="center">
             <Label> {' Chọn ảnh '} </Label>
             <LoadImage
-              preview={preview}
-              setPreview={setPreview}
               selectedFile={selectedFile}
               setSelectedFile={setSelectedFile}
               style={{ marginRight: '5%' }}
             />
           </Stack>
 
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
             Thêm sản phẩm mới
           </LoadingButton>
         </Stack>

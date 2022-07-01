@@ -68,7 +68,8 @@
     "simplebar-react": "^2.3.6",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11",
-    "react-toastify": "^7.0.4"
+    "react-toastify": "^7.0.4",
+    "downloadjs": "^1.4.7"
   },
   "devDependencies": {
     "@babel/core": "^7.17.9",
