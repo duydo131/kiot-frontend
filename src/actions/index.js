@@ -70,6 +70,12 @@ export const actLogin = () => {
     }
 }
 
+export const actLoginAdmin = () => {
+    return {
+        type: Types.LOGIN_ADMIN,
+    }
+}
+
 export const actLogout = () => {
     return {
         type: Types.LOGOUT,

@@ -6,6 +6,7 @@ import { Card, Link, Container, Typography } from '@mui/material';
 import useResponsive from '../hooks/useResponsive';
 // components
 import Page from '../components/Page';
+import Account from '../components/Account';
 import Logo from '../components/Logo';
 // sections
 import { RegisterForm } from '../sections/auth/register';
@@ -64,13 +65,13 @@ export default function Register() {
   return (
     <Page title="Đăng ký">
       <RootStyle>
-        <HeaderStyle>
-          <Logo />
-        </HeaderStyle>
-
-        <Container>
+      <Container maxWidth="sm">
           <ContentStyle>
+            <Typography variant="h4" gutterBottom>
+              Đăng ký tài khoản mới
+            </Typography>
             <RegisterForm />
+            <Account description={'Có tài khoản. Đăng nhập!'} url={'/login'}/>
           </ContentStyle>
         </Container>
       </RootStyle>

@@ -18,6 +18,8 @@ import {
   AppConversionRates,
 } from '../sections/@dashboard/app';
 
+import { RevenueAndCost } from '../sections/@dashboard/chart.js';
+
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
@@ -30,8 +32,11 @@ export default function DashboardApp() {
           Thống kê
         </Typography>
 
-        <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
+        <Grid container spacing={3} alignItems="center" justify="center">
+          <Grid alignItems="center" justify="center" item xs={12} sm={12} md={12}>
+            <RevenueAndCost />
+          </Grid>
+          {/* <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
           </Grid>
 
@@ -207,7 +212,7 @@ export default function DashboardApp() {
                 { id: '5', label: 'Sprint Showcase' },
               ]}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Page>

@@ -1,15 +1,30 @@
 import * as Types from '../constants/ActionType';
 
 const token = JSON.parse(localStorage.getItem('token'));
-const initialState = token !== null;
+const isSuperUser = localStorage.getItem('isAdmin') === 'true';
+const initialState = {
+    login: token !== null,
+    isSuperUser: isSuperUser
+}
 
 const auth = (state = initialState, action={}) => {
     switch (action.type) {
         case Types.LOGOUT:
             localStorage.removeItem('token');
-            return false
+            return {
+                login: false,
+                isSuperUser: false
+            }
         case Types.LOGIN:
-            return true
+            return {
+                login: true,
+                isSuperUser: false
+            }
+        case Types.LOGIN_ADMIN:
+            return {
+                login: true,
+                isSuperUser: true
+            }
         default: return state;
     }
 }

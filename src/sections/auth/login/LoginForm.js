@@ -10,7 +10,7 @@ import { LoadingButton } from '@mui/lab';
 import Iconify from '../../../components/Iconify';
 import callApiHttp from '../../../utils/api';
 // action
-import { actToast, actLogin } from '../../../actions/index';
+import { actToast, actLogin, actLoginAdmin } from '../../../actions/index';
 
 // ----------------------------------------------------------------------
 
@@ -19,6 +19,7 @@ export default function LoginForm() {
   const dispatch = useDispatch();
   const toast = (message) => dispatch(actToast(message));
   const signin = () => dispatch(actLogin());
+  const signinAdmin = () => dispatch(actLoginAdmin());
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -38,12 +39,16 @@ export default function LoginForm() {
         method: 'POST',
         data: payload,
       });
-      const { token } = res.data?.data;
+      const { token, is_superuser } = res.data?.data;
       localStorage.setItem('token', JSON.stringify(token));
-      signin();
+      localStorage.setItem('isAdmin', JSON.stringify(is_superuser));
+      is_superuser ? signinAdmin() : signin();
 
       toast('Đăng nhập thành công!!');
-      return true
+
+      is_superuser
+        ? navigate('/dashboard/users', { replace: true })
+        : navigate('/dashboard/terminals', { replace: true });
     } catch (e) {
       console.log('e', e);
       let err = e?.response?.data?.data;
@@ -55,7 +60,6 @@ export default function LoginForm() {
         }
       }
       toast(errText);
-      return false
     }
   };
 
@@ -67,8 +71,7 @@ export default function LoginForm() {
     },
     validationSchema: LoginSchema,
     onSubmit: (values) => {
-      Promise.all([login(values)])
-      navigate('/dashboard/terminals', { replace: true });
+      Promise.all([login(values)]);
     },
   });
 

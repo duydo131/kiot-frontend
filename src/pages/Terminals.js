@@ -5,11 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Stack, Typography, Button, Breadcrumbs, Link } from '@mui/material';
 // components
 import Page from '../components/Page';
-import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
 import { TerminalList } from '../sections/@dashboard/terminals';
 
 // mock
-import PRODUCTS from '../_mock/products';
 import callApiHttp from '../utils/api';
 import { actEnableToast } from 'src/actions/index';
 

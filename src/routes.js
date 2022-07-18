@@ -5,12 +5,14 @@ import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
 import Blog from './pages/Blog';
 import User from './pages/User';
+import UserDetail from './pages/UserDetail';
 import Login from './pages/Login';
 import NotFound from './pages/Page404';
 import Register from './pages/Register';
 import Products from './pages/Products';
 import Terminals from './pages/Terminals';
 import TerminalCreate from './pages/TerminalCreate';
+import TerminalExtend from './pages/TerminalExtend';
 import Payment from './pages/Payment';
 import DashboardApp from './pages/DashboardApp';
 import TerminalDetail from './pages/TerminalDetail';
@@ -31,7 +33,8 @@ export default function Router({isLoggedIn}) {
       element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
       children: [
         { path: 'app', element: <DashboardApp /> },
-        { path: 'user', element: <User /> },
+        { path: 'users', element: <User /> },
+        { path: 'users/:id', element: <UserDetail /> },
         { path: 'products', element: <Products /> },
         { path: 'products/:id', element: <ProductDetail /> },
         { path: 'products/create', element: <ProductCreate /> },
@@ -39,6 +42,7 @@ export default function Router({isLoggedIn}) {
         { path: 'import-product/history', element: <WorkloadHistory /> },
         { path: 'terminals', element: <Terminals /> },
         { path: 'terminals/create', element: <TerminalCreate /> },
+        { path: 'terminals/extend', element: <TerminalExtend /> },
         { path: 'terminals/:id', element: <TerminalDetail /> }
       ],
     },

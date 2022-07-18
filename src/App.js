@@ -13,7 +13,7 @@ import Toast from './components/toast/Toast'
 // ----------------------------------------------------------------------
 
 export default function App() {
-  const isLoggedIn = useSelector(state => state.auth);
+  const isLoggedIn = useSelector(state => state.auth.login);
 
   return (
     <ThemeProvider>

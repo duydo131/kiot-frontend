@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 // material
-import { Stack, TextField, Checkbox, Typography, Link } from '@mui/material';
+import { Stack, TextField, Checkbox, Typography, Link, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
 import Iconify from '../../../components/Iconify';
@@ -12,8 +12,7 @@ import callApiHttp from '../../../utils/api';
 import { actEnableToast, actPayment } from '../../../actions/index';
 import DatePickerInt from '../../../components/DatePicker';
 import Label from 'src/components/Label';
-import DataTable from '../../../components/Table'
-
+import DataTable from '../../../components/Table';
 
 // ----------------------------------------------------------------------
 
@@ -31,29 +30,29 @@ const days = (value_1, value_2) => {
 };
 
 const columns = [
-  { 
-    field: 'name', 
-    headerName: 'Tên sản phẩm', 
+  {
+    field: 'name',
+    headerName: 'Tên sản phẩm',
     width: 250,
     renderCell: (params) => (
       <strong>
-        <Link underline='hover' component={RouterLink} to={`/dashboard/products/${params.row.id}`}>
+        <Link underline="hover" component={RouterLink} to={`/dashboard/products/${params.row.id}`}>
           {params.row.name}
         </Link>
       </strong>
     ),
   },
   { field: 'code', headerName: 'Mã', width: 240 },
-  { 
-    field: 'sku', 
-    headerName: 'Sku', 
+  {
+    field: 'sku',
+    headerName: 'Sku',
     width: 100,
   },
-  { 
-    field: 'is_active', 
-    headerName: 'Trạng thái', 
+  {
+    field: 'is_active',
+    headerName: 'Trạng thái',
     width: 90,
-    valueGetter: (params) => params.row.is_active ? "Đã bán" : "Chưa bán",
+    valueGetter: (params) => (params.row.is_active ? 'Đã bán' : 'Chưa bán'),
   },
   {
     field: 'price',
@@ -63,13 +62,15 @@ const columns = [
   },
 ];
 
-export default function TerminalDetailForm({ id }) {
+export default function TerminalDetailForm({ id, isEdit, handleSaveTerminal }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = (message) => dispatch(actEnableToast(message));
 
   const [terminal, setTerminal] = useState(null);
   const [products, setProducts] = useState([]);
+  const [nameTerminal, setNameTerminal] = useState('');
+  const [isUpdate, setIsUpdate] = useState(false)
 
   const fetchTerminalDetail = async (id) => {
     return await callApiHttp({
@@ -83,16 +84,29 @@ export default function TerminalDetailForm({ id }) {
       url: `/products`,
       method: 'GET',
       params: {
-        'terminal_id': id,
+        terminal_id: id,
       },
     });
   };
+
+  const updateTerminal = async () => {
+    console.log("nameTerminal", nameTerminal)
+    return await callApiHttp({
+      url: `/terminals/${id}`,
+      method: 'PATCH',
+      data: {
+        ...terminal,
+        name: nameTerminal,
+      },
+    });
+  }
 
   useEffect(() => {
     Promise.all([fetchTerminalDetail(id), fetchProduct(id)])
       .then((res) => {
         const { data } = res[0]?.data;
-        setTerminal(data); 
+        setTerminal(data);
+        setNameTerminal(data?.name);
         const { results } = res[1]?.data?.data;
         setProducts(results);
       })
@@ -108,17 +122,46 @@ export default function TerminalDetailForm({ id }) {
         }
         toast(errText);
       });
-  }, [id]);
+  }, [id, isUpdate]);
+
+  const handleUpdateTerminal = async () => {
+    Promise.all([updateTerminal()]).then((res) => {
+      toast("Cập nhật thành công")
+      setIsUpdate(x => !x)
+      handleSaveTerminal()
+    }).catch((e) => {
+      console.log('e', e);
+      let err = e?.response?.data?.data;
+      let errText = 'Lỗi hệ thống';
+      if (typeof err === 'object') {
+        errText = '';
+        for (let key in err) {
+          errText += `${key} : ${err[key]} \n`;
+        }
+      }
+      toast(errText);
+    });
+  }
 
   return (
     <Stack spacing={2} alignItems="center">
       <Stack direction="row" alignItems="center">
-        <Typography component="h4" ml={3} width={200}>
-          Tên gian hàng
-        </Typography>
-        <Typography variant="h5" component="h4" ml={3} width={500}>
-          {terminal?.name}
-        </Typography>
+        <Stack>
+          <Typography component="h4" ml={3} width={200}>
+            Tên gian hàng
+          </Typography>
+        </Stack>
+          {isEdit ? (
+
+        <Stack direction="row" alignItems="center">
+            <TextField fullWidth value={nameTerminal} onChange={(e) => setNameTerminal(e.target.value)} />
+            <Button onClick={handleUpdateTerminal}>Save</Button>
+        </Stack>
+          ) : (
+            <Typography variant="h5" component="h4" ml={3} width={500}>
+              {terminal?.name}
+            </Typography>
+          )}
       </Stack>
 
       <Stack direction="row" alignItems="center">
@@ -211,15 +254,14 @@ export default function TerminalDetailForm({ id }) {
         </Typography>
       </Stack>
 
-      <Stack direction="row" alignItems="center" >
+      <Stack direction="row" alignItems="center">
         <Typography variant="h5" component="h4" mt={5} ml={3} width={200}>
           Danh sách sản phẩm
         </Typography>
       </Stack>
       <Stack direction="row" alignItems="center" width={800}>
-        <DataTable rows={products} columns={columns}/>
+        <DataTable rows={products} columns={columns} />
       </Stack>
-
     </Stack>
   );
 }

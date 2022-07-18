@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink, matchPath, useLocation } from 'react-router-dom';
 // material
@@ -145,6 +146,7 @@ NavSection.propTypes = {
 };
 
 export default function NavSection({ navConfig, ...other }) {
+  const isSuperUser = useSelector(state => state.auth.isSuperUser);
   const { pathname } = useLocation();
 
   const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
@@ -152,7 +154,7 @@ export default function NavSection({ navConfig, ...other }) {
   return (
     <Box {...other}>
       <List disablePadding sx={{ p: 1 }}>
-        {navConfig.map((item) => (
+        {navConfig.filter(item => item.isApplyAll || item.isAdmin === isSuperUser).map((item) => (
           <NavItem key={item.title} item={item} active={match} />
         ))}
       </List>

@@ -1,15 +1,16 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Link, Container, Typography } from '@mui/material';
+import { Card, Stack, Container, Typography } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
 import Page from '../components/Page';
-import Account from '../components/Account';
+import Logo from '../components/Logo';
 // sections
-import { LoginForm } from '../sections/auth/login';
-import AuthSocial from '../sections/auth/AuthSocial';
+import { UserDetailForm } from '../sections/@dashboard/user';
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +48,7 @@ const SectionStyle = styled(Card)(({ theme }) => ({
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
   margin: 'auto',
+  marginTop: '-12%',
   minHeight: '100vh',
   display: 'flex',
   justifyContent: 'center',
@@ -56,21 +58,28 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function Login() {
+export default function UserDetail() {
   const smUp = useResponsive('up', 'sm');
 
   const mdUp = useResponsive('up', 'md');
 
+  const { id: userId } = useParams();
+
+  const [isManager, setIsManager] = useState(false)
+
   return (
-    <Page title="Đăng nhập">
+    <Page title="Thông tin người dùng">
       <RootStyle>
-        <Container maxWidth="sm">
-          <ContentStyle>
-            <Typography variant="h4" gutterBottom>
-              Đăng nhập vào trang quản lý
+        <HeaderStyle>
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
+            <Typography variant="h4">
+              {`Chi tiết người ${isManager ? "bán" : "mua hàng"}`}
             </Typography>
-            <LoginForm />
-            <Account description={'Đăng ký tài khoản mới!'} url={'/register'}/>
+          </Stack>
+        </HeaderStyle>
+        <Container>
+          <ContentStyle>
+            <UserDetailForm id={userId} setIsManager={setIsManager}/>
           </ContentStyle>
         </Container>
       </RootStyle>

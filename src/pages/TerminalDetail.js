@@ -1,4 +1,5 @@
 import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Card, Stack, Container, Typography, Button, Link, Breadcrumbs } from '@mui/material';
@@ -64,14 +65,24 @@ export default function TerminalDetail() {
   const mdUp = useResponsive('up', 'md');
 
   const { id: terminalId } = useParams();
+  const [isEdit, setIsEdit] = useState(false);
 
   const storeTerminalId = (id) => {
-    localStorage.setItem('terminalId', id)
-  }
+    localStorage.setItem('terminalId', id);
+  };
 
   const handleNewProduct = () => {
     storeTerminalId(terminalId);
     navigate('/dashboard/products/create', { replace: true });
+  };
+
+  const handleExtendTerminal = () => {
+    storeTerminalId(terminalId);
+    navigate('/dashboard/terminals/extend', { replace: true });
+  };
+
+  const handleSaveTerminal = () => {
+    setIsEdit(false);
   };
 
   return (
@@ -83,18 +94,33 @@ export default function TerminalDetail() {
               <Link fontSize={'24px'} underline="hover" color="inherit" href="/dashboard/terminals">
                 Gian hàng
               </Link>
-              <Typography fontSize={'24px'} color="text.primary">Chi tiết gian hàng</Typography>
+              <Typography fontSize={'24px'} color="text.primary">
+                Chi tiết gian hàng
+              </Typography>
             </Breadcrumbs>
             <Stack alignItems="center" justifyContent="space-between" ml={40}>
-              <Button variant="contained" onClick={handleNewProduct}>
-                Thêm sản phẩm mới
-              </Button>
+              <Typography variant="h4">Chi tiết gian hàng</Typography>
+              <Stack alignItems="center" justifyContent="space-between" ml={15}>
+                <Button variant="contained" onClick={() => setIsEdit((e) => !e)}>
+                  Chỉnh sửa
+                </Button>
+              </Stack>
+              <Stack alignItems="center" justifyContent="space-between" ml={5}>
+                <Button variant="contained" onClick={handleExtendTerminal}>
+                  Gia hạn gian hàng
+                </Button>
+              </Stack>
+              <Stack alignItems="center" justifyContent="space-between" ml={5}>
+                <Button variant="contained" onClick={handleNewProduct}>
+                  Thêm sản phẩm mới
+                </Button>
+              </Stack>
             </Stack>
           </Stack>
         </HeaderStyle>
         <Container>
           <ContentStyle>
-            <TerminalDetailForm id={terminalId} />
+            <TerminalDetailForm id={terminalId} isEdit={isEdit} handleSaveTerminal={handleSaveTerminal} />
           </ContentStyle>
         </Container>
       </RootStyle>

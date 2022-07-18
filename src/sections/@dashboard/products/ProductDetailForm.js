@@ -4,12 +4,13 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 // material
-import { Stack, TextField, Checkbox, Typography, Link } from '@mui/material';
+import { Stack, TextField, Checkbox, Typography, Link, Button } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
 import Image from '../../../components/Image';
 import callApiHttp from '../../../utils/api';
 import { actEnableToast } from '../../../actions/index';
+import LoadImage from '../../../components/LoadImage';
 
 // ----------------------------------------------------------------------
 
@@ -29,8 +30,15 @@ export default function ProductDetailForm({ id }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = (message) => dispatch(actEnableToast(message));
-
+  const [selectedFile, setSelectedFile] = useState();
+  const [isEdit, setIsEdit] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [fetch, setFetch] = useState(false);
   const [product, setProduct] = useState([]);
+  const [newProduct, setNewProduct] = useState({
+    name: '',
+    price: 0,
+  });
 
   const fetchProductDetail = async (id) => {
     return await callApiHttp({
@@ -44,6 +52,10 @@ export default function ProductDetailForm({ id }) {
       .then((res) => {
         const { data } = res[0]?.data;
         setProduct(data);
+        setNewProduct({
+          name: data.name,
+          price: data.price,
+        });
       })
       .catch((e) => {
         console.log('e', e);
@@ -57,21 +69,130 @@ export default function ProductDetailForm({ id }) {
         }
         toast(errText);
       });
-  }, [id]);
+  }, [id, fetch]);
+
+  const changeImageProduct = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+      const upload = await callApiHttp({
+        baseUrl: 'http://localhost:8080',
+        url: '/upload',
+        method: 'POST',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      console.log('upload', upload);
+
+      var payload = {
+        ...product,
+        image: upload?.data?.filepath,
+      };
+      const res = await callApiHttp({
+        url: `/products/${product.id}`,
+        method: 'PATCH',
+        data: payload,
+      });
+      const { data } = res?.data;
+      console.log('data', data);
+      setFetch((e) => !e);
+      setIsEdit(false);
+      setSelectedFile(undefined);
+    } catch (e) {
+      console.log('e', e);
+      let err = e?.response?.data?.data;
+      let errText = 'Cập nhật ảnh sản phẩm thất bại';
+      if (typeof err === 'object') {
+        errText = '';
+        for (let key in err) {
+          errText += `${key} : ${err[key]} \n`;
+        }
+      }
+      toast(errText);
+    }
+  };
+
+  const updateProduct = async () => {
+    return await callApiHttp({
+      url: `/products/${id}`,
+      method: 'PATCH',
+      data: {
+        ...product,
+        ...newProduct,
+      },
+    });
+  }
+
+  const handleUpdateProduct = async () => {
+    Promise.all([updateProduct()]).then((res) => {
+      toast("Cập nhật thành công")
+      setIsUpdate(x => !x)
+      setFetch(x => !x)
+    }).catch((e) => {
+      console.log('e', e);
+      let err = e?.response?.data?.data;
+      let errText = 'Lỗi hệ thống';
+      if (typeof err === 'object') {
+        errText = '';
+        for (let key in err) {
+          errText += `${key} : ${err[key]} \n`;
+        }
+      }
+      toast(errText);
+    });
+  }
 
   return (
     <Stack direction="row" spacing={2} alignItems="center" ml={-25}>
       <Stack spacing={2} alignItems="center">
-        <Image link={product?.image}/>
+        {isEdit && (
+          <LoadImage selectedFile={selectedFile} setSelectedFile={setSelectedFile} style={{ marginRight: '5%' }} />
+        )}
+        {selectedFile === undefined && <Image link={product?.image} onClick={() => setIsEdit((e) => !e)} />}
+        {isEdit && (
+          <Stack direction="row" alignItems="center">
+            <Button variant="contained" style={{ marginRight: '5px' }} onClick={changeImageProduct}>
+              Cập nhật ảnh
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setIsEdit((e) => !e), setSelectedFile(undefined);
+              }}
+            >
+              Hủy
+            </Button>
+          </Stack>
+        )}
       </Stack>
       <Stack spacing={2} alignItems="center">
+        <Stack direction="row" alignItems="center">
+          <Button variant="contained" onClick={() => setIsUpdate((e) => !e)}>
+            Thay đổi thông tin sản phẩm
+          </Button>
+        </Stack>
+
         <Stack direction="row" alignItems="center">
           <Typography component="h4" ml={3} width={200}>
             Tên sản phẩm
           </Typography>
-          <Typography variant="h5" component="h4" ml={3} width={500}>
-            {product?.name}
-          </Typography>
+          {isUpdate ? (
+            <Stack direction="row" alignItems="center">
+              <TextField
+                fullWidth
+                value={newProduct.name}
+                onChange={(e) => {
+                  let p = { ...newProduct };
+                  p.name = e.target.value;
+                  setNewProduct(p);
+                }}
+              />
+            </Stack>
+          ) : (
+            <Typography variant="h5" component="h4" ml={3} width={500}>
+              {product?.name}
+            </Typography>
+          )}
         </Stack>
 
         <Stack direction="row" alignItems="center">
@@ -159,9 +280,26 @@ export default function ProductDetailForm({ id }) {
           <Typography component="h4" ml={3} width={200}>
             Giá
           </Typography>
-          <Typography component="h5" ml={3} width={500}>
-            {`${numberWithCommas(product?.price)} đồng`}
-          </Typography>
+          {isUpdate ? (
+            <Stack direction="row" alignItems="center">
+              <TextField
+                fullWidth
+                value={newProduct?.price}
+                onChange={(e) => {
+                  let p = { ...newProduct };
+                  p.price = e.target.value;
+                  setNewProduct(p);
+                }}
+              />
+            </Stack>
+          ) : (
+            <Typography component="h5" ml={3} width={500}>
+              {`${numberWithCommas(product?.price)} đồng`}
+            </Typography>
+          )}
+        </Stack>
+        <Stack direction="row" alignItems="center">
+        <Button variant="contained" onClick={handleUpdateProduct}> Cập nhật</Button>
         </Stack>
       </Stack>
     </Stack>
