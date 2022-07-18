@@ -1,7 +1,7 @@
 import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Container, Typography, Button } from '@mui/material';
+import { Card, Stack, Container, Typography, Button, Breadcrumbs } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -72,7 +72,9 @@ export default function ImportProduct() {
       <RootStyle>
         <HeaderStyle>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="h4">Thông tin import sản phẩm</Typography>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Typography fontSize={'24px'} color="text.primary">Thông tin import sản phẩm</Typography>
+            </Breadcrumbs>
             <Stack alignItems="center" justifyContent="space-between" ml={40}>
               <Button variant="contained" onClick={handleViewHistoryImport}>
                 Xem lịch sử import

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 // material
-import { Container, Stack, Typography } from '@mui/material';
+import { Container, Stack, Typography, Breadcrumbs } from '@mui/material';
 // components
 import Page from '../components/Page';
 import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
@@ -23,9 +23,9 @@ export default function EcommerceShop() {
   return (
     <Page title="Sản phẩm">
       <Container>
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Sản phẩm
-        </Typography>
+        <Breadcrumbs aria-label="breadcrumb">
+          <Typography fontSize={'24px'} color="text.primary">Sản phẩm</Typography>
+        </Breadcrumbs>
 
         {/* <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
           <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>

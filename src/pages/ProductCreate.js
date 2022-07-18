@@ -1,7 +1,7 @@
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Container, Typography } from '@mui/material';
+import { Card, Stack, Container, Typography, Breadcrumbs, Link } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -67,7 +67,12 @@ export default function TerminalCreate() {
         <HeaderStyle>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4" sx={{ mb: 5 }}>
-              Thêm sản phẩm mới
+              <Breadcrumbs aria-label="breadcrumb">
+                <Link fontSize={'24px'} underline="hover" color="inherit" href="/dashboard/products">
+                  Sản phẩm
+                </Link>
+                <Typography fontSize={'24px'} color="text.primary">Thêm sản phẩm mới</Typography>
+              </Breadcrumbs>
             </Typography>
           </Stack>
         </HeaderStyle>
