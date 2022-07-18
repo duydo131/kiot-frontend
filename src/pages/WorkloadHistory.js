@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Container, Typography } from '@mui/material';
+import { Card, Stack, Container, Typography, Breadcrumbs, Link } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -96,14 +96,17 @@ export default function WorkloadHistoryDetail() {
       <RootStyle>
         <HeaderStyle>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="h4">
-              Lịch sử import
-            </Typography>
+          <Breadcrumbs aria-label="breadcrumb">
+              <Link fontSize={'24px'} underline="hover" color="inherit" href="/dashboard/import-product">
+                Import sản phẩm
+              </Link>
+              <Typography fontSize={'24px'} color="text.primary">Thông tin import sản phẩm</Typography>
+            </Breadcrumbs>
           </Stack>
         </HeaderStyle>
         <Container>
           <ContentStyle>
-            <WorkloadHistoryList workloads={workloads}/>
+            <WorkloadHistoryList workloads={workloads} />
           </ContentStyle>
         </Container>
       </RootStyle>

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // material
-import { Container, Stack, Typography, Button } from '@mui/material';
+import { Container, Stack, Typography, Button, Breadcrumbs, Link } from '@mui/material';
 // components
 import Page from '../components/Page';
 import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
@@ -53,19 +53,25 @@ export default function Terminals() {
   };
 
   return (
-    <Page title="Gian hàng">
-      <Container>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h4" sx={{ mb: 5 }}>
-            Gian hàng
-          </Typography>
-          <Button variant="contained" onClick={handleNewTerminal}>
-            Tạo gian hàng mới
-          </Button>
-        </Stack>
+    <>
 
-        <TerminalList terminals={terminals} />
-      </Container>
-    </Page>
+      <Page title="Gian hàng">
+        <Container>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+            <Typography variant="h4" sx={{ mb: 5 }}>
+              <Breadcrumbs aria-label="breadcrumb">
+                <Typography fontSize={'24px'} color="text.primary">Gian hàng</Typography>
+              </Breadcrumbs>
+            </Typography>
+            <Button variant="contained" onClick={handleNewTerminal}>
+              Tạo gian hàng mới
+            </Button>
+          </Stack>
+
+          <TerminalList terminals={terminals} />
+        </Container>
+      </Page>
+    </>
+
   );
 }

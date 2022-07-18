@@ -1,7 +1,7 @@
 import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Container, Typography, Button } from '@mui/material';
+import { Card, Stack, Container, Typography, Button, Link, Breadcrumbs } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -79,7 +79,12 @@ export default function TerminalDetail() {
       <RootStyle>
         <HeaderStyle>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="h4">Chi tiết gian hàng</Typography>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link fontSize={'24px'} underline="hover" color="inherit" href="/dashboard/terminals">
+                Gian hàng
+              </Link>
+              <Typography fontSize={'24px'} color="text.primary">Chi tiết gian hàng</Typography>
+            </Breadcrumbs>
             <Stack alignItems="center" justifyContent="space-between" ml={40}>
               <Button variant="contained" onClick={handleNewProduct}>
                 Thêm sản phẩm mới
