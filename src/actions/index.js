@@ -113,3 +113,9 @@ export const actDisableToast = () => {
         type: Types.DISABLE_TOAST,
     }
 }
+
+export const actChangeAvatar = () => {
+    return {
+        type: Types.CHANGE_AVATAR,
+    }
+}

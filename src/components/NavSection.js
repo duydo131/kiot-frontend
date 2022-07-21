@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink, matchPath, useLocation } from 'react-router-dom';
 // material
@@ -7,6 +7,7 @@ import { alpha, useTheme, styled } from '@mui/material/styles';
 import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton } from '@mui/material';
 //
 import Iconify from './Iconify';
+import {actLogout} from './../actions/index'
 
 // ----------------------------------------------------------------------
 
@@ -37,10 +38,12 @@ NavItem.propTypes = {
 
 function NavItem({ item, active }) {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const logout = () => dispatch(actLogout());
 
   const isActiveRoot = active(item.path);
 
-  const { title, path, icon, info, children } = item;
+  const { title, path, icon, info, children, id } = item;
 
   const [open, setOpen] = useState(isActiveRoot);
 
@@ -122,7 +125,7 @@ function NavItem({ item, active }) {
   }
 
   const handleLogout = () => {
-    if(title === 'logout') localStorage.removeItem('token');
+    if(id === 6) logout()
   }
 
   return (
@@ -149,7 +152,7 @@ export default function NavSection({ navConfig, ...other }) {
   const isSuperUser = useSelector(state => state.auth.isSuperUser);
   const { pathname } = useLocation();
 
-  const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
+  const match = (path) =>  (path ? !!matchPath({ path, end: false }, pathname) : false);
 
   return (
     <Box {...other}>

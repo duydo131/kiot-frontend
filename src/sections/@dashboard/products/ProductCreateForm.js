@@ -39,7 +39,6 @@ export default function ProductCreateForm() {
     Promise.all([fetchTerminalDetail(id)])
       .then((res) => {
         const { data } = res[0]?.data;
-        console.log(data);
         setTerminal(data);
       })
       .catch((e) => {

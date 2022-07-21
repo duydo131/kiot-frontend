@@ -1,4 +1,5 @@
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 import PropTypes from 'prop-types';
 // material
@@ -12,8 +13,19 @@ function formatDate(value) {
   return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
 }
 
-export default function UserList({ users, ...other }) {
-  const columns = [
+const genderToName = (gender) => {
+  switch (gender) {
+    case 'MALE':
+      return 'Nam';
+    case 'FEMALE':
+      return 'Nữ';
+    default:
+      return 'Chưa rõ';
+  }
+};
+
+export default function UserList({ users, isSeller, ...other }) {
+  let columns = [
     {
       field: 'name',
       headerName: 'Tên',
@@ -37,6 +49,10 @@ export default function UserList({ users, ...other }) {
       align: 'center',
       valueGetter: (params) => formatDate(params.row.created_at),
     },
+    
+  ];
+
+  const sellerColumns = [
     {
       field: 'total_terminal',
       headerName: 'Số gian hàng',
@@ -53,7 +69,31 @@ export default function UserList({ users, ...other }) {
       type: 'number',
       width: 150,
     },
-  ];
+  ]
 
-  return <DataTable rows={users} columns={columns} />;
+  const userColumns = [
+    {
+      field: 'address',
+      headerName: 'Địa chỉ',
+      headerAlign: 'center',
+      align: 'center',
+      width: 230,
+      valueGetter: (params) => params.row.address  || 'Chưa có',
+    },
+    {
+      field: 'total_order',
+      headerName: 'Tổng đơn hàng',
+      headerAlign: 'center',
+      align: 'center',
+      width: 150,
+    },
+  ]
+
+  const [realColumns, setRealColumns] = useState([])
+
+  useEffect(() => {
+    isSeller ? setRealColumns(columns.concat(sellerColumns)) : setRealColumns(columns.concat(userColumns))
+  }, [isSeller])
+
+  return <DataTable rows={users} columns={realColumns} />;
 }

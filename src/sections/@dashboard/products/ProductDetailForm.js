@@ -148,7 +148,7 @@ export default function ProductDetailForm({ id }) {
         {isEdit && (
           <LoadImage selectedFile={selectedFile} setSelectedFile={setSelectedFile} style={{ marginRight: '5%' }} />
         )}
-        {selectedFile === undefined && <Image link={product?.image} onClick={() => setIsEdit((e) => !e)} />}
+        {selectedFile === undefined && <Image isProduct={true} link={product?.image} onClick={() => setIsEdit((e) => !e)} />}
         {isEdit && (
           <Stack direction="row" alignItems="center">
             <Button variant="contained" style={{ marginRight: '5px' }} onClick={changeImageProduct}>
@@ -299,7 +299,12 @@ export default function ProductDetailForm({ id }) {
           )}
         </Stack>
         <Stack direction="row" alignItems="center">
-        <Button variant="contained" onClick={handleUpdateProduct}> Cập nhật</Button>
+        {isUpdate && (
+          <Stack direction="row" alignItems="center" spacing={3}>
+            <Button variant="contained" onClick={handleUpdateProduct}> Cập nhật</Button>
+            <Button variant="contained" onClick={() => setIsUpdate(false)}> Hủy</Button>
+        </Stack>
+        )}
         </Stack>
       </Stack>
     </Stack>

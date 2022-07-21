@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 // material
@@ -10,14 +10,14 @@ import { LoadingButton } from '@mui/lab';
 import Iconify from '../../../components/Iconify';
 import callApiHttp from '../../../utils/api';
 // action
-import { actToast, actLogin, actLoginAdmin } from '../../../actions/index';
+import { actEnableToast, actToast, actLogin, actLoginAdmin } from '../../../actions/index';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const toast = (message) => dispatch(actToast(message));
+  const toast = (message) => dispatch(actEnableToast(message));
   const signin = () => dispatch(actLogin());
   const signinAdmin = () => dispatch(actLoginAdmin());
 
@@ -39,16 +39,18 @@ export default function LoginForm() {
         method: 'POST',
         data: payload,
       });
-      const { token, is_superuser } = res.data?.data;
+      const { token, is_superuser, is_user } = res.data?.data;
       localStorage.setItem('token', JSON.stringify(token));
       localStorage.setItem('isAdmin', JSON.stringify(is_superuser));
       is_superuser ? signinAdmin() : signin();
 
-      toast('Đăng nhập thành công!!');
+      if(is_user){
+        window.location.href = 'http://localhost:3000/signin'
+      }else{
+        toast('Đăng nhập thành công!!');
+        navigate('/dashboard/home', { replace: true })
+      }
 
-      is_superuser
-        ? navigate('/dashboard/users', { replace: true })
-        : navigate('/dashboard/terminals', { replace: true });
     } catch (e) {
       console.log('e', e);
       let err = e?.response?.data?.data;
@@ -59,6 +61,7 @@ export default function LoginForm() {
           errText += `${key} : ${err[key]} \n`;
         }
       }
+      setLoading(false)
       toast(errText);
     }
   };
@@ -80,6 +83,29 @@ export default function LoginForm() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
+
+  const [loading, setLoading] = useState(isSubmitting)
+  useEffect(() => {
+    setLoading(isSubmitting)
+  }, [isSubmitting])
+
+  const isLoggedIn = useSelector((state) => state.auth.login);
+  const checkCurrentUser = async () => {
+    try {
+      const res = await callApiHttp({
+        url: '/users/me',
+        method: 'GET',
+      });
+      const { role } = res?.data?.data;
+      if (role === 'MANAGER' || role === 'ADMIN') {
+        navigate('/dashboard/home');
+      }
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    if(isLoggedIn) checkCurrentUser()
+  }, [isLoggedIn]);
 
   return (
     <FormikProvider value={formik}>
@@ -126,7 +152,7 @@ export default function LoginForm() {
           </Link> */}
         </Stack>
 
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+        <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
           Đăng nhập
         </LoadingButton>
       </Form>

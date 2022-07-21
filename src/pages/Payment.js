@@ -1,93 +1,75 @@
-import 'react-toastify/dist/ReactToastify.css';
-import { useNavigate } from 'react-router-dom';
+// @mui
+import { styled } from '@mui/material/styles';
+import { Card, Container, Typography } from '@mui/material';
+// hooks
+import useResponsive from '../hooks/useResponsive';
+// components
+import Page from '../components/Page';
+// sections
+import { PaymentForm } from '../sections/@dashboard/user'
 
+// ----------------------------------------------------------------------
 
-import { useDispatch, useSelector } from 'react-redux';
-import { actEnableToast} from 'src/actions/index'
-import callApiHttp from "./../utils/api"
+const RootStyle = styled('div')(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    display: 'flex',
+  },
+}));
 
+const HeaderStyle = styled('header')(({ theme }) => ({
+  top: 0,
+  zIndex: 9,
+  lineHeight: 0,
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  position: 'absolute',
+  padding: theme.spacing(3),
+  justifyContent: 'space-between',
+  [theme.breakpoints.up('md')]: {
+    alignItems: 'flex-start',
+    padding: theme.spacing(7, 5, 0, 7),
+  },
+}));
 
-function Payment() {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+const SectionStyle = styled(Card)(({ theme }) => ({
+  width: '100%',
+  maxWidth: 464,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  margin: theme.spacing(2, 0, 2, 2),
+}));
 
-    const infoPayment = useSelector(state => state.payment);
+const ContentStyle = styled('div')(({ theme }) => ({
+  maxWidth: 480,
+  margin: 'auto',
+  minHeight: '100vh',
+  display: 'flex',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  padding: theme.spacing(12, 0),
+}));
 
-    const toast = (message) => dispatch(actEnableToast(message));
+// ----------------------------------------------------------------------
 
-    async function SubmitForm(e) {
-        var cardId = document.getElementById('txtCardId').value;
-        var bank = document.getElementById('txtBank').value;
-        if (cardId === "" || bank === "") {
-            toast("Thiếu thông tin thanh toán")
-            return
-        }
-        var payload = {
-          "card_id": cardId,
-          "bank": bank,
-          "amount": infoPayment.amount,
-          "handler_id": infoPayment.handler_id,
-          "type": infoPayment.type
-        }
-        try{
-            const res = await callApiHttp({
-                url: '/payments',
-                method: 'POST',
-                data: payload
-            })
-            const {id} = res?.data?.data
+export default function Payment() {
+  const smUp = useResponsive('up', 'sm');
 
-            console.log(id)
-            const success = await callApiHttp({
-              url: '/after-payment/success',
-              method: 'POST',
-              data: {
-                id
-              }
-            })
-            toast("Thanh toán thành công!!!")
-            // history.push('/')
-            navigate('/dashboard/terminals', { replace: true });
-        }catch(e){
-            console.log("e", e)
-            let err = e?.response?.data?.data
-            let errText = 'Đặt hàng thất bại'
-            if(typeof(err) === 'object'){
-                errText = ''
-                for ( let key in err){
-                    errText += `${key} : ${err[key]} \n`
-                }
-            }
-            toast(errText)
-        }
-    }
+  const mdUp = useResponsive('up', 'md');
 
-    return (
-        <div className="top-bar">
-            <div className="container">
-                <div className="row" >
-                    <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6 center-block">
-
-                            <legend>Thanh toán</legend>
-
-                            <div className="form-group text-left">
-                                <label >Số tài khoản</label>
-                                <input type="text" className="form-control" id="txtCardId" placeholder="Nhập số tài khoản" />
-                            </div>
-
-                            <div className="form-group text-left">
-                                <label >Ngân hàng</label>
-                                <input type="text" className="form-control" id="txtBank" placeholder="Nhập ngân hàng" />
-                            </div>
-                              <h4>
-                              <strong>Tổng Tiền:  {infoPayment.amount} đồng</strong>
-                              </h4>
-                            <button type="submit" onClick={SubmitForm} className="btn btn-primary center-block">Submit</button>``
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+  return (
+    <Page title="Thanh toán">
+      <RootStyle>
+        <Container maxWidth="sm">
+          <ContentStyle>
+            <Typography variant="h4" gutterBottom>
+              Thanh toán
+            </Typography>
+            <PaymentForm />
+          </ContentStyle>
+        </Container>
+      </RootStyle>
+    </Page>
+  );
 }
-
-export default Payment;

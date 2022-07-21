@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,7 @@ import Iconify from '../../../components/Iconify';
 import callApiHttp from '../../../utils/api';
 import { actEnableToast, actPayment } from '../../../actions/index';
 import Label from 'src/components/Label';
+import Combobox from 'src/components/Combobox';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +26,24 @@ function parseDateString(value, originalValue) {
   return parsedDate;
 }
 
+const genders = [
+  {
+    id: 1,
+    title: 'Chưa rõ',
+    value: 'UNKNOWN',
+  },
+  {
+    id: 2,
+    title: 'Nam',
+    value: 'MALE',
+  },
+  {
+    id: 3,
+    title: 'Nữ',
+    value: 'FEMALE',
+  },
+];
+
 export default function TerminalCreateForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -32,6 +51,7 @@ export default function TerminalCreateForm() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showRePassword, setShowRePassword] = useState(false);
+  const [gender, setGender] = useState();
 
   const RegisterSchema = Yup.object().shape({
     username: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Name is required'),
@@ -46,6 +66,7 @@ export default function TerminalCreateForm() {
       email: values['email'],
       password: values['password'],
       role: 'MANAGER',
+      gender: gender,
     };
     return await callApiHttp({
       url: '/users/register',
@@ -65,7 +86,7 @@ export default function TerminalCreateForm() {
     onSubmit: (values) => {
       Promise.all([register(values)])
         .then((data) => {
-          toast("Đăng ký thành công");
+          toast('Đăng ký thành công');
           navigate('/login', { replace: true });
         })
         .catch((e) => {
@@ -78,6 +99,7 @@ export default function TerminalCreateForm() {
               errText += `${key} : ${err[key]} \n`;
             }
           }
+          setLoading(false);
           toast(errText);
         });
     },
@@ -92,6 +114,11 @@ export default function TerminalCreateForm() {
   const handleReShowPassword = () => {
     setReShowPassword((show) => !show);
   };
+
+  const [loading, setLoading] = useState(isSubmitting);
+  useEffect(() => {
+    setLoading(isSubmitting);
+  }, [isSubmitting]);
 
   return (
     <FormikProvider value={formik}>
@@ -116,6 +143,8 @@ export default function TerminalCreateForm() {
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
           />
+
+          <Combobox label={'Giới tính'} items={genders} value={gender} setValue={setGender} />
 
           <TextField
             fullWidth
@@ -154,13 +183,7 @@ export default function TerminalCreateForm() {
             helperText={touched.repassword && errors.repassword}
           />
 
-          <LoadingButton
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-            // loading={isSubmitting}
-          >
+          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
             Đăng Ký
           </LoadingButton>
         </Stack>

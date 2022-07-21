@@ -20,6 +20,7 @@ import ProductDetail from './pages/ProductDetail';
 import ProductCreate from './pages/ProductCreate';
 import ImportProduct from './pages/ImportProduct';
 import WorkloadHistory from './pages/WorkloadHistory';
+import Home from './pages/Home';
 
 
 // ----------------------------------------------------------------------
@@ -32,9 +33,12 @@ export default function Router({isLoggedIn}) {
       path: '/dashboard',
       element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
       children: [
+        { path: 'home', element: <Home /> },
         { path: 'app', element: <DashboardApp /> },
-        { path: 'users', element: <User /> },
+        { path: 'sellers', element: <User isSeller={true}/> },
+        { path: 'users', element: <User isSeller={false}/> },
         { path: 'users/:id', element: <UserDetail /> },
+        { path: 'sellers/:id', element: <UserDetail /> },
         { path: 'products', element: <Products /> },
         { path: 'products/:id', element: <ProductDetail /> },
         { path: 'products/create', element: <ProductCreate /> },
@@ -54,7 +58,7 @@ export default function Router({isLoggedIn}) {
       path: '/',
       element: <LogoOnlyLayout />,
       children: [
-        { path: '/', element: <Navigate to="/dashboard/terminals" /> },
+        { path: '/', element: <Navigate to="/dashboard/home" /> },
         { path: 'login', element: <Login /> },
         { path: 'register', element: <Register /> },
         { path: '404', element: <NotFound /> },

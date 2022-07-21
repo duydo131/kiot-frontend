@@ -70,7 +70,7 @@ export default function ProductDetail() {
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Typography variant="h4">
               <Breadcrumbs aria-label="breadcrumb">
-                <Link fontSize={'24px'} underline="hover" color="inherit" href="/dashboard/products">
+                <Link fontSize={'24px'} underline="hover" color="inherit" component={RouterLink} to="/dashboard/products">
                   Sản phẩm
                 </Link>
                 <Typography fontSize={'24px'} color="text.primary">Chi tiết phẩm mới</Typography>

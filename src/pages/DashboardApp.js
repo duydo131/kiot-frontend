@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // components
 import Page from '../components/Page';
-import Iconify from '../components/Iconify';
+import LineChart from '../components/LineChart';
 // sections
 import {
   AppTasks,
@@ -18,7 +18,7 @@ import {
   AppConversionRates,
 } from '../sections/@dashboard/app';
 
-import { RevenueAndCost } from '../sections/@dashboard/chart.js';
+import { RevenueAndCost, Order } from '../sections/@dashboard/chart.js';
 
 // ----------------------------------------------------------------------
 
@@ -32,10 +32,14 @@ export default function DashboardApp() {
           Thống kê
         </Typography>
 
-        <Grid container spacing={3} alignItems="center" justify="center">
+        <Grid container spacing={3} alignItems="center" justify="center" spacing={10}>
           <Grid alignItems="center" justify="center" item xs={12} sm={12} md={12}>
             <RevenueAndCost />
           </Grid>
+          <Grid alignItems="center" justify="center" item xs={12} sm={12} md={12}>
+            <Order />
+          </Grid>
+
           {/* <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
           </Grid>

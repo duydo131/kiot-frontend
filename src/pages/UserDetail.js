@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Container, Typography } from '@mui/material';
+import { Card, Stack, Container, Typography, Breadcrumbs, Link } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -65,21 +65,36 @@ export default function UserDetail() {
 
   const { id: userId } = useParams();
 
-  const [isManager, setIsManager] = useState(false)
+  const [role, setRole] = useState('');
+  const [link, setLink] = useState('sellers')
 
   return (
     <Page title="Thông tin người dùng">
       <RootStyle>
         <HeaderStyle>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="h4">
-              {`Chi tiết người ${isManager ? "bán" : "mua hàng"}`}
+            <Typography variant="h4" sx={{ mb: 5 }}>
+              <Breadcrumbs aria-label="breadcrumb">
+                <Link 
+                  fontSize={'24px'} 
+                  underline="hover" 
+                  color="inherit" 
+                  component={RouterLink} 
+                  to={`/dashboard/${link}`}
+                >
+                  {`Danh sách ${role}`}
+                </Link>
+                <Typography fontSize={'24px'} color="text.primary">
+                  {`Chi tiết ${role}`}
+                </Typography>
+              </Breadcrumbs>
             </Typography>
+            {/* <Typography variant="h4">{`Chi tiết ${role}`}</Typography> */}
           </Stack>
         </HeaderStyle>
         <Container>
           <ContentStyle>
-            <UserDetailForm id={userId} setIsManager={setIsManager}/>
+            <UserDetailForm id={userId} setRole={setRole} setLink={setLink}/>
           </ContentStyle>
         </Container>
       </RootStyle>

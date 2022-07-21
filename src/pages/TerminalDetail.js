@@ -47,7 +47,7 @@ const SectionStyle = styled(Card)(({ theme }) => ({
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
   margin: 'auto',
-  marginTop: '-10%',
+  marginTop: '-5%',
   minHeight: '100vh',
   display: 'flex',
   justifyContent: 'center',
@@ -89,17 +89,17 @@ export default function TerminalDetail() {
     <Page title="Thông tin gian hàng">
       <RootStyle>
         <HeaderStyle>
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <Stack justifyContent="space-between">
             <Breadcrumbs aria-label="breadcrumb">
-              <Link fontSize={'24px'} underline="hover" color="inherit" href="/dashboard/terminals">
+              <Link fontSize={'24px'} underline="hover" color="inherit" component={RouterLink} to="/dashboard/terminals">
                 Gian hàng
               </Link>
               <Typography fontSize={'24px'} color="text.primary">
                 Chi tiết gian hàng
               </Typography>
             </Breadcrumbs>
-            <Stack alignItems="center" justifyContent="space-between" ml={40}>
-              <Typography variant="h4">Chi tiết gian hàng</Typography>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" mt={3}>
+              {/* <Typography variant="h4">Chi tiết gian hàng</Typography> */}
               <Stack alignItems="center" justifyContent="space-between" ml={15}>
                 <Button variant="contained" onClick={() => setIsEdit((e) => !e)}>
                   Chỉnh sửa

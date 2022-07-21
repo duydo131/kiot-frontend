@@ -61,17 +61,36 @@ export default function TerminalCreate() {
 
   const mdUp = useResponsive('up', 'md');
 
+  const id = localStorage.getItem('terminalId');
+
   return (
-    <Page title="Đăng ký gian hàng">
+    <Page title="Thêm sản phẩm">
       <RootStyle>
         <HeaderStyle>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4" sx={{ mb: 5 }}>
               <Breadcrumbs aria-label="breadcrumb">
-                <Link fontSize={'24px'} underline="hover" color="inherit" href="/dashboard/products">
-                  Sản phẩm
+                <Link
+                  fontSize={'24px'}
+                  underline="hover"
+                  color="inherit"
+                  component={RouterLink}
+                  to="/dashboard/terminals"
+                >
+                  Gian hàng
                 </Link>
-                <Typography fontSize={'24px'} color="text.primary">Thêm sản phẩm mới</Typography>
+                <Link
+                  fontSize={'24px'}
+                  underline="hover"
+                  color="inherit"
+                  component={RouterLink}
+                  to={`/dashboard/terminals/${id}`}
+                >
+                  Chi tiết gian hàng
+                </Link>
+                <Typography fontSize={'24px'} color="text.primary">
+                  Thêm sản phẩm mới
+                </Typography>
               </Breadcrumbs>
             </Typography>
           </Stack>

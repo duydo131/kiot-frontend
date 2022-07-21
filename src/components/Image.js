@@ -1,8 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { DEFAULT_IMAGE_PRODUCT } from './../constants/httpConstants'
+import { DEFAULT_IMAGE_PRODUCT, DEFAULT_IMAGE_USER } from './../constants/httpConstants'
 
-export default function Image({link, alt, onClick}) {
+export default function Image({link, alt, onClick, isProduct}) {
+  const url = link || (isProduct ? DEFAULT_IMAGE_PRODUCT : DEFAULT_IMAGE_USER);
   return (
     <Box
       component="img"
@@ -13,7 +14,7 @@ export default function Image({link, alt, onClick}) {
         maxWidth: { xs: 350, md: 250 },
       }}
       alt={alt || ''}
-      src={link || DEFAULT_IMAGE_PRODUCT}
+      src={url}
       onClick={onClick}
       style={{cursor: 'pointer'}}
     />

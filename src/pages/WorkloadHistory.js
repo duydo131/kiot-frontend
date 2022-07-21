@@ -97,7 +97,7 @@ export default function WorkloadHistoryDetail() {
         <HeaderStyle>
           <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Breadcrumbs aria-label="breadcrumb">
-              <Link fontSize={'24px'} underline="hover" color="inherit" href="/dashboard/import-product">
+              <Link fontSize={'24px'} underline="hover" color="inherit" component={RouterLink} to="/dashboard/import-product">
                 Import sản phẩm
               </Link>
               <Typography fontSize={'24px'} color="text.primary">Thông tin import sản phẩm</Typography>

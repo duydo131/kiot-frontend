@@ -5,15 +5,13 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function Combobox({label, items}) {
-  const [value, setValue] = React.useState('');
-
+export default function Combobox({label, items, value, setValue}) {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
 
-  const genItem = (items) => {
-    return items.map(s => <MenuItem key={s.id} value={s.id}>{s.title}</MenuItem>)
+  const rederItems = (items) => {
+    return items.map(s => <MenuItem key={s.id} value={s.value}>{s.title}</MenuItem>)
   }
 
   return (
@@ -30,7 +28,7 @@ export default function Combobox({label, items}) {
           {/* <MenuItem value={10}>Ten</MenuItem>
           <MenuItem value={20}>Twenty</MenuItem>
           <MenuItem value={30}>Thirty</MenuItem> */}
-          {genItem(items)}
+          {rederItems(items)}
         </Select>
       </FormControl>
     </Box>

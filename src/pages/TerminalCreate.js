@@ -68,7 +68,7 @@ export default function TerminalCreate() {
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4" sx={{ mb: 5 }}>
               <Breadcrumbs aria-label="breadcrumb">
-                <Link fontSize={'24px'} underline="hover" color="inherit" href="/dashboard/terminals">
+                <Link fontSize={'24px'} underline="hover" color="inherit" component={RouterLink} to="/dashboard/terminals">
                   Gian hàng
                 </Link>
                 <Typography fontSize={'24px'} color="text.primary">Đăng ký Gian hàng</Typography>

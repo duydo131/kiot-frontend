@@ -5,7 +5,7 @@
   "version": "1.4.0",
   "private": false,
   "scripts": {
-    "start": "react-scripts start",
+    "start": "export PORT=3006 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -52,6 +52,7 @@
     "change-case": "^4.1.2",
     "chart.js": "^3.8.0",
     "date-fns": "^2.28.0",
+    "dotenv": "^16.0.1",
     "downloadjs": "^1.4.7",
     "formik": "^2.2.9",
     "history": "^5.2.0",

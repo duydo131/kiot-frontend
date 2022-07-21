@@ -1,45 +1,68 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 // material
-import { Container, Stack, Typography, Breadcrumbs } from '@mui/material';
+import { Container, Stack, Typography, Button, Breadcrumbs, Link } from '@mui/material';
 // components
 import Page from '../components/Page';
-import { ProductSort, ProductList, ProductCartWidget, ProductFilterSidebar } from '../sections/@dashboard/products';
+import { ProductListTable } from '../sections/@dashboard/products';
+
 // mock
-import PRODUCTS from '../_mock/products';
+import callApiHttp from '../utils/api';
+import { actEnableToast } from 'src/actions/index';
 
 // ----------------------------------------------------------------------
 
-export default function EcommerceShop() {
-  const [openFilter, setOpenFilter] = useState(false);
+export default function Terminals() {
+  const dispatch = useDispatch();
+  const toast = (message) => dispatch(actEnableToast(message));
+  const [products, setProducts] = useState([]);
 
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
+  const fetchProducts = async () => {
+    try {
+      const res = await callApiHttp({
+        url: '/products',
+        method: 'GET',
+        params: {
+          // 'pageSize': 10
+        }
+      });
+      const { results } = res?.data?.data;
+      setProducts(results);
+    } catch (e) {
+      console.log('e', e);
+      let err = e?.response?.data?.data;
+      let errText = 'Lỗi hệ thống';
+      if (typeof err === 'object') {
+        errText = '';
+        for (let key in err) {
+          errText += `${key} : ${err[key]} \n`;
+        }
+      }
+      toast(errText);
+    }
   };
 
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   return (
-    <Page title="Sản phẩm">
-      <Container>
-        <Breadcrumbs aria-label="breadcrumb">
-          <Typography fontSize={'24px'} color="text.primary">Sản phẩm</Typography>
-        </Breadcrumbs>
-
-        {/* <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
-          <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-            <ProductFilterSidebar
-              isOpenFilter={openFilter}
-              onOpenFilter={handleOpenFilter}
-              onCloseFilter={handleCloseFilter}
-            />
-            <ProductSort />
+    <>
+      <Page title="Sản phẩm">
+        <Container>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+            <Typography variant="h4" sx={{ mb: 5 }}>
+              <Breadcrumbs aria-label="breadcrumb">
+                <Typography fontSize={'24px'} color="text.primary">Danh sách sản phẩm</Typography>
+              </Breadcrumbs>
+            </Typography>
           </Stack>
-        </Stack> */}
 
-        <ProductList products={[]} />
-      </Container>
-    </Page>
+          <ProductListTable products={products} />
+        </Container>
+      </Page>
+    </>
+
   );
 }
