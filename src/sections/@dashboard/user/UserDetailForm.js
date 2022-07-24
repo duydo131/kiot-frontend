@@ -289,7 +289,7 @@ const parseMonthToParam = (value) => {
   };
 };
 
-export default function UserDetailForm({ id, setRole, setLink }) {
+export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = (message) => dispatch(actEnableToast(message));
@@ -440,7 +440,7 @@ export default function UserDetailForm({ id, setRole, setLink }) {
         toast(errText);
       });
   };
-
+  setCheckIsMe(isMe)
   return (
     <Stack direction="row" spacing={5} alignItems="center" ml={-20}>
       <Stack spacing={2} alignItems="center">
