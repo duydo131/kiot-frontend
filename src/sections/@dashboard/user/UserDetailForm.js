@@ -477,16 +477,16 @@ export default function UserDetailForm({ id, setRole, setLink }) {
             </Button>
           </Stack>
         )
-      :
-      null}
+          :
+          null}
         <br />
 
-        <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
+        <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
           <Typography variant="h6" component="h4" ml={3} width={200} >
             Tên người dùng:
           </Typography>
           {isMe && isUpdate ? (
-            <Stack direction="row" alignItems="center" width={500}>
+            <Stack direction="row" alignItems="center" width={500} ml={3}>
               <TextField
                 size='small'
                 fullWidth
@@ -506,12 +506,12 @@ export default function UserDetailForm({ id, setRole, setLink }) {
           )}
         </Stack>
 
-        <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
+        <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
           <Typography variant="h6" component="h4" ml={3} width={200}>
             Địa chỉ:
           </Typography>
           {isMe && isUpdate ? (
-            <Stack direction="row" alignItems="center" width={500}>
+            <Stack direction="row" alignItems="center" width={500} ml={3}>
               <TextField
                 fullWidth
                 size='small'
@@ -540,12 +540,20 @@ export default function UserDetailForm({ id, setRole, setLink }) {
           </Typography>
         </Stack>
 
-        <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
+        <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
           <Typography variant="h6" component="h4" ml={3} width={200}>
             Giới tính:
           </Typography>
           {isMe && isUpdate ? (
-            <Combobox label={'Giới tính'} items={genders} value={gender} setValue={setGender} sx={{ width: 300 }} />
+            <Stack ml={3}>
+              <Combobox
+                label={'Giới tính'}
+                items={genders}
+                value={gender}
+                setValue={setGender}
+                sx={{ width: 300 }}
+              />
+            </Stack>
           ) : (
             <Typography component="h5" ml={3} width={500}>
               {genderToName(user?.gender)}
@@ -631,7 +639,7 @@ export default function UserDetailForm({ id, setRole, setLink }) {
           <Stack direction="row" alignItems="center" spacing={3}>
             <Button variant="contained" onClick={handleUpdateUser}>
               Cập nhật
-            </Button> 
+            </Button>
             <Button variant="contained" onClick={() => handlerCancelUpdateUser(true)}>
               Hủy
             </Button>

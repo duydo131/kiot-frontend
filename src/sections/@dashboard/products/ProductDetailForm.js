@@ -166,19 +166,27 @@ export default function ProductDetailForm({ id }) {
         )}
       </Stack>
       <Stack spacing={2} alignItems="center">
-        <Stack direction="row" alignItems="center">
+        {
+          !isUpdate ? (
+            <Stack direction="row" alignItems="center" ml={-60}>
           <Button variant="contained" onClick={() => setIsUpdate((e) => !e)}>
             Thay đổi thông tin sản phẩm
           </Button>
         </Stack>
+          )
+          :
+          null
+        }
 
-        <Stack direction="row" alignItems="center">
+        <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
           <Typography component="h4" ml={3} width={200}>
             Tên sản phẩm
           </Typography>
           {isUpdate ? (
-            <Stack direction="row" alignItems="center">
+            <Stack direction="row" alignItems="center" ml={3} width={500}>
               <TextField
+                size='small'
+                label="Tên sản phẩm"
                 fullWidth
                 value={newProduct.name}
                 onChange={(e) => {
@@ -189,7 +197,7 @@ export default function ProductDetailForm({ id }) {
               />
             </Stack>
           ) : (
-            <Typography variant="h5" component="h4" ml={3} width={500}>
+            <Typography component="h4" ml={3} width={500}>
               {product?.name}
             </Typography>
           )}
@@ -199,7 +207,7 @@ export default function ProductDetailForm({ id }) {
           <Typography component="h4" ml={3} width={200}>
             Mã sản phẩm
           </Typography>
-          <Typography variant="h5" component="h4" ml={3} width={500}>
+          <Typography component="h4" ml={3} width={500}>
             {product?.code}
           </Typography>
         </Stack>
@@ -208,7 +216,7 @@ export default function ProductDetailForm({ id }) {
           <Typography component="h4" ml={3} width={200}>
             Sku
           </Typography>
-          <Typography variant="h5" component="h4" ml={3} width={500}>
+          <Typography component="h4" ml={3} width={500}>
             {product?.sku}
           </Typography>
         </Stack>
@@ -276,14 +284,16 @@ export default function ProductDetailForm({ id }) {
           </Typography>
         </Stack>
 
-        <Stack direction="row" alignItems="center">
-          <Typography component="h4" ml={3} width={200}>
+        <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
+          <Typography component="h4" ml={3} width={200} >
             Giá
           </Typography>
           {isUpdate ? (
-            <Stack direction="row" alignItems="center">
+            <Stack direction="row" alignItems="center" ml={3}>
               <TextField
+                size='small'
                 fullWidth
+                label="Giá"
                 value={newProduct?.price}
                 onChange={(e) => {
                   let p = { ...newProduct };
