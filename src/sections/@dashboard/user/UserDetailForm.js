@@ -342,7 +342,10 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
 
         const c_user = res[1]?.data?.data;
 
-        setIsMe(c_user.id === data.id);
+        // setIsMe(c_user.id === data.id);
+        const is_me = c_user.id === data.id
+        setIsMe(is_me)
+        setCheckIsMe(is_me)
       })
       .catch((e) => {
         console.log('e', e);
@@ -357,7 +360,6 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
         toast(errText);
       });
   }, [id, fetch, month]);
-
   const changeImageUser = async () => {
     try {
       const formData = new FormData();
@@ -398,7 +400,7 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
       toast(errText);
     }
   };
-
+  console.log("abccc")
   const handlerCancelUpdateUser = (isCancel) => {
     setNewUser({
       name: user?.name,
@@ -440,7 +442,7 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
         toast(errText);
       });
   };
-  setCheckIsMe(isMe)
+
   return (
     <Stack direction="row" spacing={5} alignItems="center" ml={-20}>
       <Stack spacing={2} alignItems="center">
