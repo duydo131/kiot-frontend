@@ -64,7 +64,7 @@ export default function UserDetail() {
   const mdUp = useResponsive('up', 'md');
 
   const { id: userId } = useParams();
-
+  const [checkIsMe, setCheckIsMe] = useState(false)
   const [role, setRole] = useState('');
   const [link, setLink] = useState('sellers')
 
@@ -72,29 +72,35 @@ export default function UserDetail() {
     <Page title="Thông tin người dùng">
       <RootStyle>
         <HeaderStyle>
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="h4" sx={{ mb: 5 }}>
-              <Breadcrumbs aria-label="breadcrumb">
-                <Link 
-                  fontSize={'24px'} 
-                  underline="hover" 
-                  color="inherit" 
-                  component={RouterLink} 
-                  to={`/dashboard/${link}`}
-                >
-                  {`Danh sách ${role}`}
-                </Link>
-                <Typography fontSize={'24px'} color="text.primary">
-                  {`Chi tiết ${role}`}
+          {
+            checkIsMe
+              ?
+              null
+              :
+              <Stack direction="row" alignItems="center" justifyContent="space-between">
+                <Typography variant="h4" sx={{ mb: 5 }}>
+                  <Breadcrumbs aria-label="breadcrumb">
+                    <Link
+                      fontSize={'24px'}
+                      underline="hover"
+                      color="inherit"
+                      component={RouterLink}
+                      to={`/dashboard/${link}`}
+                    >
+                      {`Danh sách ${role}`}
+                    </Link>
+                    <Typography fontSize={'24px'} color="text.primary">
+                      {`Chi tiết ${role}`}
+                    </Typography>
+                  </Breadcrumbs>
                 </Typography>
-              </Breadcrumbs>
-            </Typography>
-            {/* <Typography variant="h4">{`Chi tiết ${role}`}</Typography> */}
-          </Stack>
+                {/* <Typography variant="h4">{`Chi tiết ${role}`}</Typography> */}
+              </Stack>
+          }
         </HeaderStyle>
         <Container>
           <ContentStyle>
-            <UserDetailForm id={userId} setRole={setRole} setLink={setLink}/>
+            <UserDetailForm id={userId} setRole={setRole} setLink={setLink} setCheckIsMe={setCheckIsMe} />
           </ContentStyle>
         </Container>
       </RootStyle>
