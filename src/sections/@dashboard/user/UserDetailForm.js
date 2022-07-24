@@ -26,6 +26,7 @@ import callApiHttp from '../../../utils/api';
 import { actEnableToast, actChangeAvatar } from '../../../actions/index';
 import LoadImage from '../../../components/LoadImage';
 import Combobox from 'src/components/Combobox';
+import { height, width } from '@mui/system';
 
 // ----------------------------------------------------------------------
 
@@ -380,7 +381,6 @@ export default function UserDetailForm({ id, setRole, setLink }) {
         data: payload,
       });
       const { data } = res?.data;
-      console.log('data', data);
       setFetch((e) => !e);
       setIsEdit(false);
       setSelectedFile(undefined);
@@ -442,7 +442,7 @@ export default function UserDetailForm({ id, setRole, setLink }) {
   };
 
   return (
-    <Stack direction="row" spacing={2} alignItems="center" ml={-20}>
+    <Stack direction="row" spacing={5} alignItems="center" ml={-20}>
       <Stack spacing={2} alignItems="center">
         {isMe && isEdit && (
           <LoadImage selectedFile={selectedFile} setSelectedFile={setSelectedFile} style={{ marginRight: '5%' }} />
@@ -466,9 +466,9 @@ export default function UserDetailForm({ id, setRole, setLink }) {
           </Stack>
         )}
       </Stack>
-      <Stack spacing={2} alignItems="center" ml={3}>
-        {isMe && (
-          <Stack direction="row" alignItems="center" spacing={5} ml={-33}>
+      <Stack spacing={3} alignItems="center" ml={3}>
+        {isMe && !isUpdate ? (
+          <Stack direction="row" alignItems="center" spacing={5} ml={-40}>
             <Button variant="contained" onClick={() => handlerCancelUpdateUser(false)}>
               Thay đổi thông tin cá nhân
             </Button>
@@ -476,16 +476,21 @@ export default function UserDetailForm({ id, setRole, setLink }) {
               Đổi mật khẩu
             </Button>
           </Stack>
-        )}
+        )
+      :
+      null}
+        <br />
 
-        <Stack direction="row" alignItems="center">
-          <Typography component="h4" ml={3} width={200}>
-            Tên người dùng
+        <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
+          <Typography variant="h6" component="h4" ml={3} width={200} >
+            Tên người dùng:
           </Typography>
           {isMe && isUpdate ? (
-            <Stack direction="row" alignItems="center">
+            <Stack direction="row" alignItems="center" width={500}>
               <TextField
+                size='small'
                 fullWidth
+                label="Tên người dùng"
                 value={newUser.name}
                 onChange={(e) => {
                   let p = { ...newUser };
@@ -495,20 +500,22 @@ export default function UserDetailForm({ id, setRole, setLink }) {
               />
             </Stack>
           ) : (
-            <Typography variant="h5" component="h4" ml={3} width={500}>
+            <Typography component="h4" ml={3} width={500}>
               {user?.name}
             </Typography>
           )}
         </Stack>
 
-        <Stack direction="row" alignItems="center">
-          <Typography component="h4" ml={3} width={200}>
-            Địa chỉ
+        <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
+          <Typography variant="h6" component="h4" ml={3} width={200}>
+            Địa chỉ:
           </Typography>
           {isMe && isUpdate ? (
-            <Stack direction="row" alignItems="center">
+            <Stack direction="row" alignItems="center" width={500}>
               <TextField
                 fullWidth
+                size='small'
+                label="Địa chỉ"
                 value={newUser.address}
                 onChange={(e) => {
                   let p = { ...newUser };
@@ -518,27 +525,27 @@ export default function UserDetailForm({ id, setRole, setLink }) {
               />
             </Stack>
           ) : (
-            <Typography variant="h5" component="h4" ml={3} width={500}>
+            <Typography component="h4" ml={3} width={500}>
               {user?.address || 'Chưa có'}
             </Typography>
           )}
         </Stack>
 
         <Stack direction="row" alignItems="center">
-          <Typography component="h4" ml={3} width={200}>
-            Email
+          <Typography variant="h6" component="h4" ml={3} width={200}>
+            Email:
           </Typography>
-          <Typography variant="h5" component="h4" ml={3} width={500}>
+          <Typography component="h4" ml={3} width={500}>
             {user?.email}
           </Typography>
         </Stack>
 
-        <Stack direction="row" alignItems="center">
-          <Typography component="h4" ml={3} width={200}>
-            Giới tính
+        <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
+          <Typography variant="h6" component="h4" ml={3} width={200}>
+            Giới tính:
           </Typography>
           {isMe && isUpdate ? (
-            <Combobox label={'Giới tính'} items={genders} value={gender} setValue={setGender} />
+            <Combobox label={'Giới tính'} items={genders} value={gender} setValue={setGender} sx={{ width: 300 }} />
           ) : (
             <Typography component="h5" ml={3} width={500}>
               {genderToName(user?.gender)}
@@ -547,8 +554,8 @@ export default function UserDetailForm({ id, setRole, setLink }) {
         </Stack>
 
         <Stack direction="row" alignItems="center">
-          <Typography component="h4" ml={3} width={200}>
-            Trạng thái
+          <Typography variant="h6" component="h4" ml={3} width={200}>
+            Trạng thái:
           </Typography>
           <Typography component="h5" ml={3} width={500}>
             {user?.is_active ? 'Hoạt động' : 'Không hoạt động'}
@@ -556,8 +563,8 @@ export default function UserDetailForm({ id, setRole, setLink }) {
         </Stack>
 
         <Stack direction="row" alignItems="center">
-          <Typography component="h4" ml={3} width={200}>
-            Chức vụ
+          <Typography variant="h6" component="h4" ml={3} width={200}>
+            Chức vụ:
           </Typography>
           <Typography component="h5" ml={3} width={500}>
             {roleToName(user?.role)}
@@ -565,8 +572,8 @@ export default function UserDetailForm({ id, setRole, setLink }) {
         </Stack>
 
         <Stack direction="row" alignItems="center">
-          <Typography component="h4" ml={3} width={200}>
-            Thời gian đăng ký tài khoản
+          <Typography variant="h6" component="h4" ml={3} width={200}>
+            Thời gian đăng ký tài khoản:
           </Typography>
           <Typography component="h5" ml={3} width={500}>
             {formatDate(user?.created_at)}
@@ -575,8 +582,8 @@ export default function UserDetailForm({ id, setRole, setLink }) {
 
         {roleCode === 'MANAGER' && (
           <Stack direction="row" alignItems="center">
-            <Typography component="h4" ml={3} width={200}>
-              Số lượng gian hàng
+            <Typography variant="h6" component="h4" ml={3} width={200}>
+              Số lượng gian hàng:
             </Typography>
             <Typography component="h5" ml={3} width={500}>
               {`${user?.total_terminal || 0} Gian hàng`}
@@ -586,8 +593,8 @@ export default function UserDetailForm({ id, setRole, setLink }) {
 
         {roleCode === 'MANAGER' && (
           <Stack direction="row" alignItems="center">
-            <Typography component="h4" ml={3} width={200}>
-              Số lượng sản phẩm trong hệ thống
+            <Typography variant="h6" component="h4" ml={3} width={200}>
+              Số lượng sản phẩm trong hệ thống:
             </Typography>
             <Typography component="h5" ml={3} width={500}>
               {`${user?.total_product || 0} Sản phẩm`}
@@ -597,8 +604,8 @@ export default function UserDetailForm({ id, setRole, setLink }) {
 
         {roleCode === 'USER' && (
           <Stack direction="row" alignItems="center">
-            <Typography component="h4" ml={3} width={200}>
-              Số lượng đơn hàng
+            <Typography variant="h6" component="h4" ml={3} width={200}>
+              Số lượng đơn hàng:
             </Typography>
             <Typography component="h5" ml={3} width={500}>
               {`${user?.total_order || 0} đơn hàng`}
@@ -609,8 +616,8 @@ export default function UserDetailForm({ id, setRole, setLink }) {
         {roleCode === 'USER' && (
           <Stack spacing={2} alignItems="center" ml={3}>
             <Stack direction="row" alignItems="center">
-              <Typography component="h4" ml={3} width={200}>
-                Tổng chi tiêu
+              <Typography variant="h6" component="h4" ml={3} width={200}>
+                Tổng chi tiêu:
               </Typography>
               <Typography component="h5" ml={3} width={500}>
                 {`${user?.total_money || 0} đồng`}
@@ -624,7 +631,7 @@ export default function UserDetailForm({ id, setRole, setLink }) {
           <Stack direction="row" alignItems="center" spacing={3}>
             <Button variant="contained" onClick={handleUpdateUser}>
               Cập nhật
-            </Button>
+            </Button> 
             <Button variant="contained" onClick={() => handlerCancelUpdateUser(true)}>
               Hủy
             </Button>
