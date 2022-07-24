@@ -148,7 +148,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         </Drawer>
       )}
 
-      {isDesktop &&(
+      {isDesktop && (
         <Drawer
           open
           variant="persistent"
