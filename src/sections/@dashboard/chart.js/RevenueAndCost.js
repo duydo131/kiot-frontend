@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 // material
 import { Grid, Stack, Typography } from '@mui/material';
 
+import useUser from '../../../hooks/useUser';
 import BarChart from '../../../components/BarChart';
 import callApiHttp from '../../../utils/api';
 import { actEnableToast, actPayment } from '../../../actions/index';
@@ -20,7 +21,7 @@ export default function RevenueAndCost() {
   const dispatch = useDispatch();
   const toast = (message) => dispatch(actEnableToast(message));
 
-  const [user, setUser] = useState()
+  const { account } = useUser();
 
   // by terminal
   const [display, setDisPlay] = useState(false);
@@ -56,28 +57,6 @@ export default function RevenueAndCost() {
     });
   };
 
-  const getCurrentUser = async () => {
-    try {
-      const res = await callApiHttp({
-        url: '/users/me',
-        method: 'GET',
-      });
-      const { data } = res?.data;
-      setUser(data)
-      if(data?.role !== 'ADMIN') setDisPlay(true)
-    } catch (e) {
-      console.log('e', e);
-      let err = e?.response?.data?.data;
-      if (typeof err === 'object') {
-        errText = '';
-        for (let key in err) {
-          errText += `${key} : ${err[key]} \n`;
-        }
-      }
-      toast(errText);
-    }
-  };
-
   useEffect(() => {
     Promise.all([fetchRevenueAndCostByTerminal(), fetchRevenueAndCostBySeller()])
       .then((res) => {
@@ -85,7 +64,7 @@ export default function RevenueAndCost() {
           // terminal
           const { data } = res[0]?.data;
           setNameChart('Theo gian hàng (5 gian hàng doanh thu lớn nhất)');
-          const fiveData = data.filter(item => item.revenue > 0 || item.cost > 0).slice(0, 5);
+          const fiveData = data.filter((item) => item.revenue > 0 || item.cost > 0).slice(0, 5);
           setChartData({
             labels: fiveData.map((category) => category.name),
             datasets: [
@@ -117,7 +96,7 @@ export default function RevenueAndCost() {
           const { data } = res[1]?.data;
           console.log(data);
           setNameChartBySeller('Theo người bán (5 người bán hàng doanh thu lớn nhất)');
-          const fiveData = data.filter(item => item.revenue > 0 || item.cost > 0).slice(0, 5);
+          const fiveData = data.filter((item) => item.revenue > 0 || item.cost > 0).slice(0, 5);
           setChartDataBySeller({
             labels: fiveData.map((category) => category.name),
             datasets: [
@@ -155,8 +134,8 @@ export default function RevenueAndCost() {
   }, []);
 
   useEffect(() => {
-    getCurrentUser()
-  }, [])
+    if (account?.role === 'MANAGER') setDisPlay(true);
+  }, [account]);
 
   return (
     <Grid container spacing={3}>
@@ -192,7 +171,9 @@ export default function RevenueAndCost() {
         </Stack>
       </Stack>
       <BarChart chartData={chartData} nameChart={nameChart} legendDisplay={display} />
-      { user?.role === 'ADMIN' && <BarChart chartData={chartDataBySeller} nameChart={nameChartBySeller} legendDisplay={displayBySeller} />}
+      {account?.role === 'ADMIN' && (
+        <BarChart chartData={chartDataBySeller} nameChart={nameChartBySeller} legendDisplay={displayBySeller} />
+      )}
     </Grid>
   );
 }

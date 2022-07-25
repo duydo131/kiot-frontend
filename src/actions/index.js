@@ -114,8 +114,8 @@ export const actDisableToast = () => {
     }
 }
 
-export const actChangeAvatar = () => {
+export const actChangeInfo = () => {
     return {
-        type: Types.CHANGE_AVATAR,
+        type: Types.CHANGE_INFO,
     }
 }

@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 // material
 import { Grid, Stack, Typography } from '@mui/material';
 
-import BarChart from '../../../components/BarChart';
+import useUser from '../../../hooks/useUser';
 import callApiHttp from '../../../utils/api';
 import { actEnableToast, actPayment } from '../../../actions/index';
 import LineChart from 'src/components/LineChart';
@@ -17,14 +17,14 @@ const colors = [
   'rgba(65,51,46,1)',
   'rgba(98,161,157,1)',
   'rgba(85,33,71,1)',
-  'rgba(36,123,233,1)'
-]
+  'rgba(36,123,233,1)',
+];
 
 export default function Order() {
   const dispatch = useDispatch();
   const toast = (message) => dispatch(actEnableToast(message));
 
-  const [user, setUser] = useState();
+  const { account } = useUser();
 
   // by terminal
   const [display, setDisPlay] = useState(true);
@@ -56,27 +56,6 @@ export default function Order() {
     });
   };
 
-  const getCurrentUser = async () => {
-    try {
-      const res = await callApiHttp({
-        url: '/users/me',
-        method: 'GET',
-      });
-      const { data } = res?.data;
-      setUser(data);
-    } catch (e) {
-      console.log('e', e);
-      let err = e?.response?.data?.data;
-      if (typeof err === 'object') {
-        errText = '';
-        for (let key in err) {
-          errText += `${key} : ${err[key]} \n`;
-        }
-      }
-      toast(errText);
-    }
-  };
-
   useEffect(() => {
     Promise.all([fetchOrderStatisticByTerminal(), fetchOrderStatisticBySeller()])
       .then((res) => {
@@ -84,7 +63,7 @@ export default function Order() {
           // terminal
           const { date_of_orders, terminal_to_list_total_order } = res[0]?.data?.data;
           setNameChart('Theo gian hàng');
-          let index = 0
+          let index = 0;
           setChartData({
             labels: date_of_orders.reverse(),
             datasets: terminal_to_list_total_order.map((item) => {
@@ -104,7 +83,7 @@ export default function Order() {
           // seller
           const { date_of_orders, terminal_to_list_total_order } = res[1]?.data?.data;
           setNameChartBySeller('Theo ngưới bán');
-          let index = 0
+          let index = 0;
           setChartDataBySeller({
             labels: date_of_orders.reverse(),
             datasets: terminal_to_list_total_order.map((item) => {
@@ -135,10 +114,6 @@ export default function Order() {
       });
   }, []);
 
-  useEffect(() => {
-    getCurrentUser();
-  }, []);
-
   return (
     <Grid container spacing={3}>
       <Stack>
@@ -148,7 +123,9 @@ export default function Order() {
       </Stack>
       <LineChart chartData={chartData} nameChart={nameChart} legendDisplay={display} />
       <Stack></Stack>
-      { user?.role === 'ADMIN' && <LineChart chartData={chartDataBySeller} nameChart={nameChartBySeller} legendDisplay={displayBySeller} />}
+      {account?.role === 'ADMIN' && (
+        <LineChart chartData={chartDataBySeller} nameChart={nameChartBySeller} legendDisplay={displayBySeller} />
+      )}
     </Grid>
   );
 }

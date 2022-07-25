@@ -2,14 +2,14 @@ import { combineReducers } from 'redux';
 import auth from './auth';
 import toast from './toast';
 import payment from './payment';
-import changeAvatar from './changeAvatar';
+import changeInfo from './changeInfo';
 
 
 const appReducers = combineReducers({
     auth,
     toast,
     payment,
-    changeAvatar
+    changeInfo
 });
 
 export default appReducers;

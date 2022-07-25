@@ -11,6 +11,7 @@ import Image from '../../../components/Image';
 import callApiHttp from '../../../utils/api';
 import { actEnableToast } from '../../../actions/index';
 import LoadImage from '../../../components/LoadImage';
+import useUser from '../../../hooks/useUser';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,7 @@ export default function ProductDetailForm({ id }) {
     name: '',
     price: 0,
   });
+  const { account } = useUser();
 
   const fetchProductDetail = async (id) => {
     return await callApiHttp({
@@ -167,15 +169,13 @@ export default function ProductDetailForm({ id }) {
       </Stack>
       <Stack spacing={2} alignItems="center">
         {
-          !isUpdate ? (
+          account?.role === 'MANAGER' && !isUpdate && (
             <Stack direction="row" alignItems="center" ml={-60}>
           <Button variant="contained" onClick={() => setIsUpdate((e) => !e)}>
             Thay đổi thông tin sản phẩm
           </Button>
         </Stack>
           )
-          :
-          null
         }
 
         <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
@@ -183,7 +183,7 @@ export default function ProductDetailForm({ id }) {
             Tên sản phẩm
           </Typography>
           {isUpdate ? (
-            <Stack direction="row" alignItems="center" ml={3} width={500}>
+            <Stack direction="row" alignItems="center" ml={3} width={300}>
               <TextField
                 size='small'
                 label="Tên sản phẩm"

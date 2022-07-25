@@ -4,9 +4,9 @@ const initialState = {
     isChange: true
 }
 
-const changeAvatar = (state = initialState, action={}) => {
+const changeInfo = (state = initialState, action={}) => {
     switch (action.type) {
-        case Types.CHANGE_AVATAR:
+        case Types.CHANGE_INFO:
             return {
                 isChange: true
             }
@@ -14,4 +14,4 @@ const changeAvatar = (state = initialState, action={}) => {
     }
 }
 
-export default changeAvatar;
+export default changeInfo;

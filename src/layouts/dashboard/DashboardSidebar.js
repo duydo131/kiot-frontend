@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useSelector, useDispatch } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
@@ -9,6 +9,8 @@ import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/mater
 // import account from '../../_mock/account';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
+import useUser from '../../hooks/useUser';
+
 // components
 import Logo from '../../components/Logo';
 import Scrollbar from '../../components/Scrollbar';
@@ -60,34 +62,11 @@ const getRole = (role) => {
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const isLoggedIn = useSelector((state) => state.auth.login);
-  const changeAvatar = useSelector((state) => state.changeAvatar);
-  const dispatch = useDispatch();
-  const toast = (message) => dispatch(actEnableToast(message));
+  const changeInfo = useSelector((state) => state.changeInfo);
 
-  const [account, setAccount] = useState();
+  const { account } = useUser([isLoggedIn, changeInfo]);
 
   const isDesktop = useResponsive('up', 'lg');
-
-  const getCurrentUser = async () => {
-    try {
-      const res = await callApiHttp({
-        url: '/users/me',
-        method: 'GET',
-      });
-      const { data } = res?.data;
-      setAccount(data);
-    } catch (e) {
-      console.log('e', e);
-      let err = e?.response?.data?.data;
-      if (typeof err === 'object') {
-        errText = '';
-        for (let key in err) {
-          errText += `${key} : ${err[key]} \n`;
-        }
-      }
-      toast(errText);
-    }
-  };
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -95,10 +74,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
-
-  useEffect(() => {
-    getCurrentUser();
-  }, [isLoggedIn, changeAvatar]);
 
   const renderContent = (
     <Scrollbar

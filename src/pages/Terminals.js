@@ -6,10 +6,9 @@ import { Container, Stack, Typography, Button, Breadcrumbs, Link } from '@mui/ma
 // components
 import Page from '../components/Page';
 import { TerminalList } from '../sections/@dashboard/terminals';
-
-// mock
 import callApiHttp from '../utils/api';
 import { actEnableToast } from 'src/actions/index';
+import useUser from '../hooks/useUser';
 
 // ----------------------------------------------------------------------
 
@@ -19,6 +18,7 @@ export default function Terminals() {
   const toast = (message) => dispatch(actEnableToast(message));
   const [openFilter, setOpenFilter] = useState(false);
   const [terminals, setTerminals] = useState([]);
+  const { account } = useUser();
 
   const fetchTerminals = async () => {
     try {
@@ -52,24 +52,26 @@ export default function Terminals() {
 
   return (
     <>
-
       <Page title="Gian hàng">
         <Container>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4" sx={{ mb: 5 }}>
               <Breadcrumbs aria-label="breadcrumb">
-                <Typography fontSize={'24px'} color="text.primary">Gian hàng</Typography>
+                <Typography fontSize={'24px'} color="text.primary">
+                  Gian hàng
+                </Typography>
               </Breadcrumbs>
             </Typography>
-            <Button variant="contained" onClick={handleNewTerminal}>
-              Tạo gian hàng mới
-            </Button>
+            {account?.role === 'MANAGER' && (
+              <Button variant="contained" onClick={handleNewTerminal}>
+                Tạo gian hàng mới
+              </Button>
+            )}
           </Stack>
 
           <TerminalList terminals={terminals} />
         </Container>
       </Page>
     </>
-
   );
 }

@@ -23,7 +23,7 @@ import { LoadingButton } from '@mui/lab';
 import Iconify from '../../../components/Iconify';
 import Image from '../../../components/Image';
 import callApiHttp from '../../../utils/api';
-import { actEnableToast, actChangeAvatar } from '../../../actions/index';
+import { actEnableToast, actChangeInfo } from '../../../actions/index';
 import LoadImage from '../../../components/LoadImage';
 import Combobox from 'src/components/Combobox';
 import { height, width } from '@mui/system';
@@ -293,7 +293,7 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = (message) => dispatch(actEnableToast(message));
-  const changeAvatar = () => dispatch(actChangeAvatar());
+  const changeInfo = () => dispatch(actChangeInfo());
   const [selectedFile, setSelectedFile] = useState();
   const [isEdit, setIsEdit] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
@@ -346,6 +346,7 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
         const is_me = c_user.id === data.id
         setIsMe(is_me)
         setCheckIsMe(is_me)
+        setIsEdit(false)
       })
       .catch((e) => {
         console.log('e', e);
@@ -360,6 +361,7 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
         toast(errText);
       });
   }, [id, fetch, month]);
+  
   const changeImageUser = async () => {
     try {
       const formData = new FormData();
@@ -386,7 +388,7 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
       setFetch((e) => !e);
       setIsEdit(false);
       setSelectedFile(undefined);
-      changeAvatar();
+      changeInfo();
     } catch (e) {
       console.log('e', e);
       let err = e?.response?.data?.data;
@@ -400,7 +402,7 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
       toast(errText);
     }
   };
-  console.log("abccc")
+
   const handlerCancelUpdateUser = (isCancel) => {
     setNewUser({
       name: user?.name,
@@ -428,6 +430,7 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
         toast('Cập nhật thành công');
         setIsUpdate((x) => !x);
         setFetch((x) => !x);
+        changeInfo()
       })
       .catch((e) => {
         console.log('e', e);
@@ -488,7 +491,7 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
             Tên người dùng:
           </Typography>
           {isMe && isUpdate ? (
-            <Stack direction="row" alignItems="center" width={500} ml={3}>
+            <Stack direction="row" alignItems="center" width={300} ml={3}>
               <TextField
                 size='small'
                 fullWidth
@@ -513,7 +516,7 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
             Địa chỉ:
           </Typography>
           {isMe && isUpdate ? (
-            <Stack direction="row" alignItems="center" width={500} ml={3}>
+            <Stack direction="row" alignItems="center" width={300} ml={3}>
               <TextField
                 fullWidth
                 size='small'
