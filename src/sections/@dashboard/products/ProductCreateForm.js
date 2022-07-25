@@ -63,17 +63,17 @@ export default function ProductCreateForm() {
   });
 
   const addProduct = async (values) => {
-    try{
-      let upload = null
-      if (selectedFile !== undefined){
+    try {
+      let upload = null;
+      if (selectedFile !== undefined) {
         const formData = new FormData();
         formData.append('file', selectedFile);
-        upload  = await callApiHttp({
+        upload = await callApiHttp({
           baseUrl: 'http://localhost:8080',
           url: '/upload',
           method: 'POST',
           data: formData,
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: { 'Content-Type': 'multipart/form-data' },
         });
         console.log('upload', upload);
       }
@@ -84,9 +84,9 @@ export default function ProductCreateForm() {
         price: values['price'],
         quantity: values['quantity'],
         terminal_code: terminal.code,
-        image: upload?.data?.filepath
+        image: upload?.data?.filepath,
       };
-      const res  = await callApiHttp({
+      const res = await callApiHttp({
         url: '/products',
         method: 'POST',
         data: payload,
@@ -94,7 +94,7 @@ export default function ProductCreateForm() {
       const { data } = res?.data;
       console.log('data', data);
       navigate(`/dashboard/products/${data.id}`, { replace: true });
-    }catch(e){
+    } catch (e) {
       console.log('e', e);
       let err = e?.response?.data?.data;
       let errText = 'Thêm sản phẩm thất bại';
@@ -105,9 +105,13 @@ export default function ProductCreateForm() {
         }
       }
       toast(errText);
-      setLoading(false)
+      setLoading(false);
       navigate('/dashboard/products/create', { replace: true });
     }
+  };
+
+  const onCancelCreateProduct = () => {
+    navigate(`/dashboard/terminals/${terminalId}`, { replace: true });
   };
 
   const formik = useFormik({
@@ -119,15 +123,15 @@ export default function ProductCreateForm() {
     },
     validationSchema: RegisterSchema,
     onSubmit: (values) => {
-      Promise.all([addProduct(values)])
+      Promise.all([addProduct(values)]);
     },
   });
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
-  const [loading, setLoading] = useState(isSubmitting)
+  const [loading, setLoading] = useState(isSubmitting);
   useEffect(() => {
-    setLoading(isSubmitting)
-  }, [isSubmitting])
+    setLoading(isSubmitting);
+  }, [isSubmitting]);
 
   return (
     <FormikProvider value={formik}>
@@ -173,16 +177,16 @@ export default function ProductCreateForm() {
 
           <Stack direction="row" alignItems="center">
             <Label> {' Chọn ảnh '} </Label>
-            <LoadImage
-              selectedFile={selectedFile}
-              setSelectedFile={setSelectedFile}
-              style={{ marginRight: '5%' }}
-            />
+            <LoadImage selectedFile={selectedFile} setSelectedFile={setSelectedFile} style={{ marginRight: '5%' }} />
           </Stack>
-
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
-            Thêm sản phẩm mới
-          </LoadingButton>
+          <Stack direction="row" alignItems="center" spacing={5}>
+            <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
+              Thêm sản phẩm mới
+            </LoadingButton>
+            <LoadingButton fullWidth size="large" variant="contained" onClick={onCancelCreateProduct}>
+              Hủy
+            </LoadingButton>
+          </Stack>
         </Stack>
       </Form>
     </FormikProvider>

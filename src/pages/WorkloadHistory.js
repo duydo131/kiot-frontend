@@ -93,23 +93,25 @@ export default function WorkloadHistoryDetail() {
 
   return (
     <Page title="Lịch sử Import">
-      <RootStyle>
-        <HeaderStyle>
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Breadcrumbs aria-label="breadcrumb">
-              <Link fontSize={'24px'} underline="hover" color="inherit" component={RouterLink} to="/dashboard/import-product">
-                Import sản phẩm
-              </Link>
-              <Typography fontSize={'24px'} color="text.primary">Thông tin import sản phẩm</Typography>
-            </Breadcrumbs>
-          </Stack>
-        </HeaderStyle>
-        <Container>
-          <ContentStyle>
-            <WorkloadHistoryList workloads={workloads} />
-          </ContentStyle>
-        </Container>
-      </RootStyle>
+            <Link
+              fontSize={'24px'}
+              underline="hover"
+              color="inherit"
+              component={RouterLink}
+              to="/dashboard/import-product"
+            >
+              Import sản phẩm
+            </Link>
+            <Typography fontSize={'24px'} color="text.primary">
+              Thông tin import sản phẩm
+            </Typography>
+          </Breadcrumbs>
+        </Stack>
+        <WorkloadHistoryList workloads={workloads} />
+      </Container>
     </Page>
   );
 }

@@ -145,7 +145,7 @@ export default function ProductDetailForm({ id }) {
   }
 
   return (
-    <Stack direction="row" spacing={2} alignItems="center" ml={-25}>
+    <Stack direction="row" spacing={2} alignItems="center" ml={5} mt={5}>
       <Stack spacing={2} alignItems="center">
         {isEdit && (
           <LoadImage selectedFile={selectedFile} setSelectedFile={setSelectedFile} style={{ marginRight: '5%' }} />

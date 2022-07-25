@@ -1,7 +1,7 @@
 import { Link as RouterLink, useParams } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Container, Typography, Link , Breadcrumbs} from '@mui/material';
+import { Card, Stack, Container, Typography, Link, Breadcrumbs } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -34,15 +34,6 @@ const HeaderStyle = styled('header')(({ theme }) => ({
   },
 }));
 
-const SectionStyle = styled(Card)(({ theme }) => ({
-  width: '100%',
-  maxWidth: 464,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  margin: theme.spacing(2, 0, 2, 2),
-}));
-
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
   margin: 'auto',
@@ -65,25 +56,21 @@ export default function ProductDetail() {
 
   return (
     <Page title="Thông tin sản phẩm">
-      <RootStyle>
-        <HeaderStyle>
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
-            <Typography variant="h4">
-              <Breadcrumbs aria-label="breadcrumb">
-                <Link fontSize={'24px'} underline="hover" color="inherit" component={RouterLink} to="/dashboard/products">
-                  Sản phẩm
-                </Link>
-                <Typography fontSize={'24px'} color="text.primary">Chi tiết phẩm mới</Typography>
-              </Breadcrumbs>
-            </Typography>
-          </Stack>
-        </HeaderStyle>
-        <Container>
-          <ContentStyle>
-            <ProductDetailForm id={productId} />
-          </ContentStyle>
-        </Container>
-      </RootStyle>
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <Typography variant="h4">
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link fontSize={'24px'} underline="hover" color="inherit" component={RouterLink} to="/dashboard/products">
+                Sản phẩm
+              </Link>
+              <Typography fontSize={'24px'} color="text.primary">
+                Chi tiết sản phẩm
+              </Typography>
+            </Breadcrumbs>
+          </Typography>
+        </Stack>
+        <ProductDetailForm id={productId}/>
+      </Container>
     </Page>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink, matchPath, useLocation } from 'react-router-dom';
@@ -7,7 +7,8 @@ import { alpha, useTheme, styled } from '@mui/material/styles';
 import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton } from '@mui/material';
 //
 import Iconify from './Iconify';
-import {actLogout} from './../actions/index'
+import { actLogout } from './../actions/index';
+import LogoutDialog from './../components/LogoutDialog';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +37,7 @@ NavItem.propTypes = {
   active: PropTypes.func,
 };
 
-function NavItem({ item, active }) {
+function NavItem({ item, active, setOpenLogout }) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const logout = () => dispatch(actLogout());
@@ -125,14 +126,14 @@ function NavItem({ item, active }) {
   }
 
   const handleLogout = () => {
-    if(id === 6) logout()
-  }
+    id === 10 && setOpenLogout(true);
+  };
 
   return (
     <ListItemStyle
       onClick={handleLogout}
       component={RouterLink}
-      to={path}
+      to={id !== 10 ? path : ''}
       sx={{
         ...(isActiveRoot && activeRootStyle),
       }}
@@ -149,18 +150,25 @@ NavSection.propTypes = {
 };
 
 export default function NavSection({ navConfig, ...other }) {
-  const isSuperUser = useSelector(state => state.auth.isSuperUser);
+  const isSuperUser = useSelector((state) => state.auth.isSuperUser);
   const { pathname } = useLocation();
+  const [open, setOpen] = useState(false);
 
-  const match = (path) =>  (path ? !!matchPath({ path, end: false }, pathname) : false);
+  const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
 
   return (
-    <Box {...other}>
-      <List disablePadding sx={{ p: 1 }}>
-        {navConfig.filter(item => item.isApplyAll || item.isAdmin === isSuperUser).map((item) => (
-          <NavItem key={item.title} item={item} active={match} />
-        ))}
-      </List>
-    </Box>
+    <>
+      <Box {...other}>
+        <List disablePadding sx={{ p: 1 }}>
+          {navConfig
+            .filter((item) => item.isApplyAll || item.isAdmin === isSuperUser)
+            .map((item) => (
+              <NavItem key={item.title} item={item} active={match} setOpenLogout={setOpen} />
+            ))}
+        </List>
+      </Box>
+
+      <LogoutDialog open={open} setOpen={setOpen} />
+    </>
   );
 }

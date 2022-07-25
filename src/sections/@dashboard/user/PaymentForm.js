@@ -52,7 +52,13 @@ function PaymentForm() {
       });
       toast('Thanh toán thành công!!!');
       // history.push('/')
-      navigate('/dashboard/terminals', { replace: true });
+      if(infoPayment.type === 'EXTEND_TERMINAL'){
+        const id = localStorage.getItem('terminalId');
+        navigate(`/dashboard/terminals/${id}`, { replace: true });
+      }else{
+        navigate('/dashboard/terminals', { replace: true });
+      }
+      
     } catch (e) {
       console.log('e', e);
       let err = e?.response?.data?.data;

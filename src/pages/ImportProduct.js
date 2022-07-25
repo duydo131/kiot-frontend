@@ -69,25 +69,23 @@ export default function ImportProduct() {
 
   return (
     <Page title="Import sản phẩm">
-      <RootStyle>
-        <HeaderStyle>
-          <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between">
+          <Typography variant="h4" sx={{ mb: 5 }}>
             <Breadcrumbs aria-label="breadcrumb">
-              <Typography fontSize={'24px'} color="text.primary">Thông tin import sản phẩm</Typography>
+              <Typography fontSize={'24px'} color="text.primary">
+                Thông tin import sản phẩm
+              </Typography>
             </Breadcrumbs>
-            <Stack alignItems="center" justifyContent="space-between" ml={40}>
-              <Button variant="contained" onClick={handleViewHistoryImport}>
-                Xem lịch sử import
-              </Button>
-            </Stack>
-          </Stack>
-        </HeaderStyle>
-        <Container>
-          <ContentStyle>
-            <ImportProductCard />
-          </ContentStyle>
-        </Container>
-      </RootStyle>
+          </Typography>
+          {/* <Stack alignItems="center" justifyContent="space-between" ml={40}> */}
+          <Button variant="contained" onClick={handleViewHistoryImport}>
+            Xem lịch sử import
+          </Button>
+          {/* </Stack> */}
+        </Stack>
+        <ImportProductCard />
+      </Container>
     </Page>
   );
 }

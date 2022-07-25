@@ -106,7 +106,7 @@ export default function ImportProductCard() {
   };
 
   return (
-    <Stack direction="row" spacing={2} alignItems="center">
+    <Stack direction="row" spacing={2} alignItems="center" mt={10}>
       <Stack spacing={6} alignItems="center">
         <Stack direction="row" alignItems="center" spacing={5}>
           <Typography variant="h6" width={150}>

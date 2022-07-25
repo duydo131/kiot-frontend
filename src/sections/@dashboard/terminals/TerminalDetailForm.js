@@ -144,7 +144,7 @@ export default function TerminalDetailForm({ id, isEdit, handleSaveTerminal }) {
   }
 
   return (
-    <Stack spacing={2} alignItems="center">
+    <Stack spacing={2} alignItems="center" mt={5}>
       <Stack direction="row" alignItems="center">
         <Stack>
           <Typography component="h4" ml={3} width={200}>

@@ -63,25 +63,27 @@ export default function TerminalCreate() {
 
   return (
     <Page title="Đăng ký gian hàng">
-      <RootStyle>
-        <HeaderStyle>
-          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-            <Typography variant="h4" sx={{ mb: 5 }}>
-              <Breadcrumbs aria-label="breadcrumb">
-                <Link fontSize={'24px'} underline="hover" color="inherit" component={RouterLink} to="/dashboard/terminals">
-                  Gian hàng
-                </Link>
-                <Typography fontSize={'24px'} color="text.primary">Đăng ký Gian hàng</Typography>
-              </Breadcrumbs>
-            </Typography>
-          </Stack>
-        </HeaderStyle>
-        <Container>
-          <ContentStyle>
-            <TerminalCreateForm />
-          </ContentStyle>
-        </Container>
-      </RootStyle>
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+          <Typography variant="h4" sx={{ mb: 5 }}>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Link
+                fontSize={'24px'}
+                underline="hover"
+                color="inherit"
+                component={RouterLink}
+                to="/dashboard/terminals"
+              >
+                Gian hàng
+              </Link>
+              <Typography fontSize={'24px'} color="text.primary">
+                Đăng ký Gian hàng
+              </Typography>
+            </Breadcrumbs>
+          </Typography>
+        </Stack>
+        <TerminalCreateForm />
+      </Container>
     </Page>
   );
 }

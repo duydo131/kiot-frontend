@@ -16,9 +16,20 @@ import Label from 'src/components/Label';
 
 // ----------------------------------------------------------------------
 function formatDate(value) {
-  let d = new Date(value)
-  return  d.getDate()  + "/" + (d.getMonth()+1) + "/" + d.getFullYear() + " " +
-  d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+  let d = new Date(value);
+  return (
+    d.getDate() +
+    '/' +
+    (d.getMonth() + 1) +
+    '/' +
+    d.getFullYear() +
+    ' ' +
+    d.getHours() +
+    ':' +
+    d.getMinutes() +
+    ':' +
+    d.getSeconds()
+  );
 }
 
 export default function TerminalCreateForm() {
@@ -27,13 +38,12 @@ export default function TerminalCreateForm() {
   const toast = (message) => dispatch(actEnableToast(message));
   const infoPayment = (handlerId, amount, type, payload) => dispatch(actPayment(handlerId, amount, type, payload));
 
-
   const [openNow, setOpenNow] = useState(false);
   const [timeOpen, setTimeOpen] = useState(null);
 
   const handleOnTypeChange = (e) => {
-    setOpenNow((x) => !x)
-  }
+    setOpenNow((x) => !x);
+  };
 
   const RegisterSchema = Yup.object().shape({
     name: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Name is required'),
@@ -48,8 +58,8 @@ export default function TerminalCreateForm() {
       code: values['code'],
       time_selling: values['time_selling'],
       max_quantity_product: values['max_quantity_product'],
-      type_time_open: openNow ? "NOW" : "AFTER",
-      time_open: formatDate(timeOpen)
+      type_time_open: openNow ? 'NOW' : 'AFTER',
+      time_open: formatDate(timeOpen),
     };
     return await callApiHttp({
       url: '/terminals/register',
@@ -69,8 +79,8 @@ export default function TerminalCreateForm() {
     onSubmit: (values) => {
       Promise.all([register(values)])
         .then((res) => {
-          const {data} = res[0]?.data
-          infoPayment(data.terminal.id, data.total_price, 'REGISTER_TERMINAL', {})
+          const { data } = res[0]?.data;
+          infoPayment(data.terminal.id, data.total_price, 'REGISTER_TERMINAL', {});
           navigate('/payment', { replace: true });
         })
         .catch((e) => {
@@ -84,7 +94,7 @@ export default function TerminalCreateForm() {
             }
           }
           toast(errText);
-          setLoading(false)
+          setLoading(false);
           navigate('/dashboard/terminals/create', { replace: true });
         });
     },
@@ -92,10 +102,14 @@ export default function TerminalCreateForm() {
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
-  const [loading, setLoading] = useState(isSubmitting)
+  const [loading, setLoading] = useState(isSubmitting);
   useEffect(() => {
-    setLoading(isSubmitting)
-  }, [isSubmitting])
+    setLoading(isSubmitting);
+  }, [isSubmitting]);
+
+  const onCancelCreateTerminal = () => {
+    navigate(`/dashboard/terminals`, { replace: true });
+  }
 
   return (
     <FormikProvider value={formik}>
@@ -121,10 +135,10 @@ export default function TerminalCreateForm() {
 
           <Stack direction="row" alignItems="center">
             <Label> Mở ngay</Label>
-            <Checkbox checked={openNow} onChange={handleOnTypeChange} onClick={handleOnTypeChange}/>
+            <Checkbox checked={openNow} onChange={handleOnTypeChange} onClick={handleOnTypeChange} />
           </Stack>
 
-          <DatePickerInt label={"Thời gian mở"} value={timeOpen} setValue={setTimeOpen} openNow={openNow}/>
+          <DatePickerInt label={'Thời gian mở'} value={timeOpen} setValue={setTimeOpen} openNow={openNow} />
 
           <TextField
             fullWidth
@@ -143,10 +157,14 @@ export default function TerminalCreateForm() {
             error={Boolean(touched.max_quantity_product && errors.max_quantity_product)}
             helperText={touched.max_quantity_product && errors.max_quantity_product}
           />
-
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
-            Đăng ký gian hàng
-          </LoadingButton>
+          <Stack direction="row" alignItems="center" spacing={5}>
+            <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
+              Đăng ký gian hàng
+            </LoadingButton>
+            <LoadingButton fullWidth size="large" variant="contained" onClick={onCancelCreateTerminal}>
+              Hủy
+            </LoadingButton>
+          </Stack>
         </Stack>
       </Form>
     </FormikProvider>

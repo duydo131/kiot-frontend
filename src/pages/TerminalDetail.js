@@ -87,43 +87,36 @@ export default function TerminalDetail() {
 
   return (
     <Page title="Thông tin gian hàng">
-      <RootStyle>
-        <HeaderStyle>
-          <Stack justifyContent="space-between">
-            <Breadcrumbs aria-label="breadcrumb">
-              <Link fontSize={'24px'} underline="hover" color="inherit" component={RouterLink} to="/dashboard/terminals">
-                Gian hàng
-              </Link>
-              <Typography fontSize={'24px'} color="text.primary">
-                Chi tiết gian hàng
-              </Typography>
-            </Breadcrumbs>
-            <Stack direction="row" alignItems="center" justifyContent="space-between" mt={3}>
-              {/* <Typography variant="h4">Chi tiết gian hàng</Typography> */}
-              <Stack alignItems="center" justifyContent="space-between" ml={15}>
-                <Button variant="contained" onClick={() => setIsEdit((e) => !e)}>
-                  Chỉnh sửa
-                </Button>
-              </Stack>
-              <Stack alignItems="center" justifyContent="space-between" ml={5}>
-                <Button variant="contained" onClick={handleExtendTerminal}>
-                  Gia hạn gian hàng
-                </Button>
-              </Stack>
-              <Stack alignItems="center" justifyContent="space-between" ml={5}>
-                <Button variant="contained" onClick={handleNewProduct}>
-                  Thêm sản phẩm mới
-                </Button>
-              </Stack>
+      <Container>
+        <Stack justifyContent="space-between">
+          <Breadcrumbs aria-label="breadcrumb">
+            <Link fontSize={'24px'} underline="hover" color="inherit" component={RouterLink} to="/dashboard/terminals">
+              Gian hàng
+            </Link>
+            <Typography fontSize={'24px'} color="text.primary">
+              Chi tiết gian hàng
+            </Typography>
+          </Breadcrumbs>
+          <Stack direction="row" alignItems="center" mt={3}>
+            <Stack alignItems="center" ml={15}>
+              <Button variant="contained" onClick={() => setIsEdit((e) => !e)}>
+                Chỉnh sửa
+              </Button>
+            </Stack>
+            <Stack alignItems="center" ml={5}>
+              <Button variant="contained" onClick={handleExtendTerminal}>
+                Gia hạn gian hàng
+              </Button>
+            </Stack>
+            <Stack alignItems="center"  ml={5}>
+              <Button variant="contained" onClick={handleNewProduct}>
+                Thêm sản phẩm mới
+              </Button>
             </Stack>
           </Stack>
-        </HeaderStyle>
-        <Container>
-          <ContentStyle>
-            <TerminalDetailForm id={terminalId} isEdit={isEdit} handleSaveTerminal={handleSaveTerminal} />
-          </ContentStyle>
-        </Container>
-      </RootStyle>
+        </Stack>
+        <TerminalDetailForm id={terminalId} isEdit={isEdit} handleSaveTerminal={handleSaveTerminal} />
+      </Container>
     </Page>
   );
 }

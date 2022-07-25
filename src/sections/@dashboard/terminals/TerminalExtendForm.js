@@ -5,7 +5,7 @@ import { useFormik, Form, FormikProvider } from 'formik';
 import { useNavigate } from 'react-router-dom';
 
 // material
-import { Stack, TextField, Checkbox } from '@mui/material';
+import { Stack, TextField, Checkbox, Typography } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // component
 import Iconify from '../../../components/Iconify';
@@ -86,8 +86,8 @@ export default function TerminalCreateForm() {
     var payload = {
       terminal_id: terminal.id,
     };
-    if(values['time_selling'] > 0) payload.extend_time_selling = values['time_selling']
-    if(values['max_quantity_product'] > 0) payload.extend_max_quantity_product = values['max_quantity_product']
+    if (values['time_selling'] > 0) payload.extend_time_selling = values['time_selling'];
+    if (values['max_quantity_product'] > 0) payload.extend_max_quantity_product = values['max_quantity_product'];
     return await callApiHttp({
       url: '/terminals/extend',
       method: 'POST',
@@ -96,20 +96,20 @@ export default function TerminalCreateForm() {
   };
 
   const validate = (values) => {
-    const extend_time_selling = values['time_selling']
-    const extend_max_quantity_product = values['max_quantity_product']
-    if(extend_time_selling <= 0 && extend_max_quantity_product <= 0){
-      toast("Chưa nhập thông tin gia hạn gian hàng")
+    const extend_time_selling = values['time_selling'];
+    const extend_max_quantity_product = values['max_quantity_product'];
+    if (extend_time_selling <= 0 && extend_max_quantity_product <= 0) {
+      toast('Chưa nhập thông tin gia hạn gian hàng');
       setLoading(false);
-      return false
+      return false;
     }
-    if(extend_max_quantity_product > 0 && extend_max_quantity_product < terminal.max_quantity_product){
-      toast("Số sản phẩm tối đã của gian hàng không được bé hơn giá trị cũ")
+    if (extend_max_quantity_product > 0 && extend_max_quantity_product < terminal.max_quantity_product) {
+      toast('Số sản phẩm tối đã của gian hàng không được bé hơn giá trị cũ');
       setLoading(false);
-      return false
+      return false;
     }
-    return true
-  }
+    return true;
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -118,8 +118,8 @@ export default function TerminalCreateForm() {
     },
     validationSchema: RegisterSchema,
     onSubmit: (values) => {
-      const isValid = validate(values)
-      if (!isValid) return
+      const isValid = validate(values);
+      if (!isValid) return;
 
       Promise.all([extend(values)])
         .then((res) => {
@@ -151,15 +151,40 @@ export default function TerminalCreateForm() {
     setLoading(isSubmitting);
   }, [isSubmitting]);
 
+  const onCancelExtendTerminal = () => {
+    navigate(`/dashboard/terminals/${terminalId}`, { replace: true });
+  };
+
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <Stack spacing={3}>
-          <TextField fullWidth label="Tên gian hàng" disabled={true} value={terminal?.name} />
+        <Stack spacing={3}  mt={5}>
+          <Stack direction="row" alignItems="center">
+            <Typography component="h4" ml={3} width={200}>
+              Tên gian hàng
+            </Typography>
+            <Typography component="h4" ml={3} width={500}>
+              {terminal?.name}
+            </Typography>
+          </Stack>
 
-          <TextField fullWidth label="Ngaỳ hết hạn đăng ký" disabled={true} value={formatDay(terminal?.expired_at)} />
+          <Stack direction="row" alignItems="center">
+            <Typography component="h4" ml={3} width={200}>
+              Ngaỳ hết hạn đăng ký
+            </Typography>
+            <Typography component="h4" ml={3} width={500}>
+              {formatDay(terminal?.expired_at)}
+            </Typography>
+          </Stack>
 
-          <TextField fullWidth label="Số sản phẩm tối đa" disabled={true} value={terminal?.max_quantity_product} />
+          <Stack direction="row" alignItems="center">
+            <Typography component="h4" ml={3} width={200}>
+              Số sản phẩm tối đa
+            </Typography>
+            <Typography component="h4" ml={3} width={500}>
+              {terminal?.max_quantity_product}
+            </Typography>
+          </Stack>
 
           <TextField
             fullWidth
@@ -178,10 +203,14 @@ export default function TerminalCreateForm() {
             error={Boolean(touched.max_quantity_product && errors.max_quantity_product)}
             helperText={touched.max_quantity_product && errors.max_quantity_product}
           />
-
-          <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
-            Gia hạn gian hàng
-          </LoadingButton>
+          <Stack direction="row" alignItems="center" spacing={5}>
+            <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={loading}>
+              Gia hạn gian hàng
+            </LoadingButton>
+            <LoadingButton fullWidth size="large" variant="contained" onClick={onCancelExtendTerminal}>
+              Hủy
+            </LoadingButton>
+          </Stack>
         </Stack>
       </Form>
     </FormikProvider>
