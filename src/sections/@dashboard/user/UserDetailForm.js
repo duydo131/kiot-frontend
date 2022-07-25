@@ -289,7 +289,7 @@ const parseMonthToParam = (value) => {
   };
 };
 
-export default function UserDetailForm({ id, setRole, setLink }) {
+export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = (message) => dispatch(actEnableToast(message));
@@ -342,7 +342,10 @@ export default function UserDetailForm({ id, setRole, setLink }) {
 
         const c_user = res[1]?.data?.data;
 
-        setIsMe(c_user.id === data.id);
+        // setIsMe(c_user.id === data.id);
+        const is_me = c_user.id === data.id
+        setIsMe(is_me)
+        setCheckIsMe(is_me)
       })
       .catch((e) => {
         console.log('e', e);
@@ -357,7 +360,6 @@ export default function UserDetailForm({ id, setRole, setLink }) {
         toast(errText);
       });
   }, [id, fetch, month]);
-
   const changeImageUser = async () => {
     try {
       const formData = new FormData();
@@ -398,7 +400,7 @@ export default function UserDetailForm({ id, setRole, setLink }) {
       toast(errText);
     }
   };
-
+  console.log("abccc")
   const handlerCancelUpdateUser = (isCancel) => {
     setNewUser({
       name: user?.name,
