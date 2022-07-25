@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Stack, Typography, Button, Breadcrumbs, Link } from '@mui/material';
 // components
 import Page from '../components/Page';
-import { TerminalList } from '../sections/@dashboard/terminals';
+import { TerminalList, TerminalFilter } from '../sections/@dashboard/terminals';
 import callApiHttp from '../utils/api';
 import { actEnableToast } from 'src/actions/index';
 import useUser from '../hooks/useUser';
@@ -17,6 +17,7 @@ export default function Terminals() {
   const dispatch = useDispatch();
   const toast = (message) => dispatch(actEnableToast(message));
   const [openFilter, setOpenFilter] = useState(false);
+  const [filter, setFilter] = useState({})
   const [terminals, setTerminals] = useState([]);
   const { account } = useUser();
 
@@ -25,6 +26,7 @@ export default function Terminals() {
       const res = await callApiHttp({
         url: '/terminals/all',
         method: 'GET',
+        params: {...filter}
       });
       const { data } = res?.data;
       setTerminals(data);
@@ -44,7 +46,7 @@ export default function Terminals() {
 
   useEffect(() => {
     fetchTerminals();
-  }, []);
+  }, [filter]);
 
   const handleNewTerminal = () => {
     navigate('/dashboard/terminals/create', { replace: true });
@@ -68,7 +70,7 @@ export default function Terminals() {
               </Button>
             )}
           </Stack>
-
+          <TerminalFilter setFilter={setFilter}/>
           <TerminalList terminals={terminals} />
         </Container>
       </Page>

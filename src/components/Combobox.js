@@ -11,7 +11,7 @@ export default function Combobox({label, items, value, setValue}) {
   };
 
   const rederItems = (items) => {
-    return items.map(s => <MenuItem key={s.id} value={s.value}>{s.title}</MenuItem>)
+    return items.map(s => <MenuItem style={{height: "30px"}} key={s.id} value={s.value}>{s.title}</MenuItem>)
   }
 
   return (
@@ -25,9 +25,6 @@ export default function Combobox({label, items, value, setValue}) {
           label={label}
           onChange={handleChange}
         >
-          {/* <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem> */}
           {rederItems(items)}
         </Select>
       </FormControl>

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Stack, Typography, Button, Breadcrumbs, Link } from '@mui/material';
 // components
 import Page from '../components/Page';
-import { ProductListTable } from '../sections/@dashboard/products';
+import { ProductListTable, ProductFilter } from '../sections/@dashboard/products';
 
 // mock
 import callApiHttp from '../utils/api';
@@ -17,15 +17,14 @@ export default function Terminals() {
   const dispatch = useDispatch();
   const toast = (message) => dispatch(actEnableToast(message));
   const [products, setProducts] = useState([]);
+  const [filter, setFilter] = useState({});
 
   const fetchProducts = async () => {
     try {
       const res = await callApiHttp({
         url: '/products',
         method: 'GET',
-        params: {
-          // 'pageSize': 10
-        }
+        params: {...filter}
       });
       const { results } = res?.data?.data;
       setProducts(results);
@@ -45,7 +44,7 @@ export default function Terminals() {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [filter]);
 
   return (
     <>
@@ -54,15 +53,16 @@ export default function Terminals() {
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4" sx={{ mb: 5 }}>
               <Breadcrumbs aria-label="breadcrumb">
-                <Typography fontSize={'24px'} color="text.primary">Danh sách sản phẩm</Typography>
+                <Typography fontSize={'24px'} color="text.primary">
+                  Danh sách sản phẩm
+                </Typography>
               </Breadcrumbs>
             </Typography>
           </Stack>
-
+          <ProductFilter setFilter={setFilter} />
           <ProductListTable products={products} />
         </Container>
       </Page>
     </>
-
   );
 }
