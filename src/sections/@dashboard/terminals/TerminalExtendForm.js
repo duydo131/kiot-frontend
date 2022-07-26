@@ -170,7 +170,7 @@ export default function TerminalCreateForm() {
 
           <Stack direction="row" alignItems="center">
             <Typography component="h4" ml={3} width={200}>
-              Ngaỳ hết hạn đăng ký
+              Ngày hết hạn đăng ký
             </Typography>
             <Typography component="h4" ml={3} width={500}>
               {formatDay(terminal?.expired_at)}

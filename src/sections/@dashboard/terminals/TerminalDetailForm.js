@@ -144,31 +144,34 @@ export default function TerminalDetailForm({ id, isEdit, handleSaveTerminal }) {
   }
 
   return (
-    <Stack spacing={2} alignItems="center" mt={5}>
-      <Stack direction="row" alignItems="center">
-        <Stack>
-          <Typography component="h4" ml={3} width={200}>
-            Tên gian hàng
-          </Typography>
-        </Stack>
-          {isEdit ? (
-
-        <Stack direction="row" alignItems="center">
-            <TextField fullWidth value={nameTerminal} onChange={(e) => setNameTerminal(e.target.value)} />
+    <Stack spacing={2} alignItems="center" mt={5} >
+      <Stack direction="row" alignItems="center" width={748}>
+        <Typography component="h4" ml={3} width={200}>
+          Tên gian hàng
+        </Typography>
+        {isEdit ? (
+          <Stack direction="row" alignItems="center" ml={3}>
+            <TextField
+              size='small'
+              fullWidth
+              label="Tên gian hàng"
+              value={nameTerminal}
+              onChange={(e) => setNameTerminal(e.target.value)}
+            />
             <Button onClick={handleUpdateTerminal}>Save</Button>
-        </Stack>
-          ) : (
-            <Typography variant="h5" component="h4" ml={3} width={500}>
-              {terminal?.name}
-            </Typography>
-          )}
+          </Stack>
+        ) : (
+          <Typography  component="h4" ml={3} width={500}>
+            {terminal?.name}
+          </Typography>
+        )}
       </Stack>
 
       <Stack direction="row" alignItems="center">
         <Typography component="h4" ml={3} width={200}>
           Mã gian hàng
         </Typography>
-        <Typography variant="h5" component="h4" ml={3} width={500}>
+        <Typography component="h4" ml={3} width={500}>
           {terminal?.code}
         </Typography>
       </Stack>
@@ -257,7 +260,7 @@ export default function TerminalDetailForm({ id, isEdit, handleSaveTerminal }) {
       <Stack direction="row" alignItems="center">
         <Typography variant="h5" component="h4" mt={5} ml={3} width={200}>
           Danh sách sản phẩm
-        </Typography>
+        </Typography> 
       </Stack>
       <Stack direction="row" alignItems="center" width={800}>
         <DataTable rows={products} columns={columns} />

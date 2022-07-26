@@ -97,19 +97,19 @@ export default function TerminalDetail() {
               Chi tiết gian hàng
             </Typography>
           </Breadcrumbs>
-          <Stack direction="row" alignItems="center" mt={3}>
-            <Stack alignItems="center" ml={15}>
-              <Button variant="contained" onClick={() => setIsEdit((e) => !e)}>
+          <Stack direction="row" justifyContent={'center'} mt={3}>
+            <Stack alignItems="center" ml={15} margin='0 20px 0 20px'>
+              <Button variant="contained" onClick={() => setIsEdit((e) => !e)} sx={{ width: '205px' }}>
                 Chỉnh sửa
               </Button>
             </Stack>
-            <Stack alignItems="center" ml={5}>
-              <Button variant="contained" onClick={handleExtendTerminal}>
+            <Stack alignItems="center" ml={5} margin='0 20px 0 20px'>
+              <Button variant="contained" onClick={handleExtendTerminal} sx={{ width: '205px' }}>
                 Gia hạn gian hàng
               </Button>
             </Stack>
-            <Stack alignItems="center"  ml={5}>
-              <Button variant="contained" onClick={handleNewProduct}>
+            <Stack alignItems="center"  ml={5} margin='0 20px 0 20px'>
+              <Button variant="contained" onClick={handleNewProduct} sx={{ width: '205px' }}>
                 Thêm sản phẩm mới
               </Button>
             </Stack>
