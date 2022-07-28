@@ -1,27 +1,16 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { useDispatch } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from '@mui/material';
-
-
-import { actLogout } from './../actions/index';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 const useStyles = makeStyles(() => ({
   dialog: {
-    height: '28%',
+    height: '30%',
     width: '30%',
   },
 }));
 
-const LogoutDialog = ({ open, setOpen }) => {
+const ConfirmDialog = ({ open, setOpen, message, handleConfirm }) => {
   const classes = useStyles();
-  const dispatch = useDispatch();
-  const logout = () => dispatch(actLogout());
 
   const handleClose = () => {
     setOpen(false);
@@ -30,9 +19,9 @@ const LogoutDialog = ({ open, setOpen }) => {
   return (
     <Dialog onClose={handleClose} open={open} classes={{ paper: classes.dialog }}>
       <DialogTitle>Xác nhận!!</DialogTitle>
-      <DialogContent>Bạn có muốn đăng xuất không?</DialogContent>
+      <DialogContent>{message}</DialogContent>
       <DialogActions>
-        <LoadingButton fullWidth size="large" variant="contained" onClick={() => logout()}>
+        <LoadingButton fullWidth size="large" variant="contained" onClick={handleConfirm}>
           Đồng ý
         </LoadingButton>
         <LoadingButton fullWidth size="large" variant="contained" onClick={handleClose}>
@@ -43,4 +32,4 @@ const LogoutDialog = ({ open, setOpen }) => {
   );
 };
 
-export default LogoutDialog;
+export default ConfirmDialog;

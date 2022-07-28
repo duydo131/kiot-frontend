@@ -22,3 +22,16 @@ export function fShortenNumber(number) {
 export function fData(number) {
   return numeral(number).format('0.0 b');
 }
+
+export function parseMonthToInt(value) {
+  if (value === 'all' || value === '') {
+    return 0
+  }
+  return parseInt(value)
+};
+
+export function getAnyMonthsAgo(month){
+  var today = new Date();
+  var nextweek = new Date(today.getFullYear(), today.getMonth() - month, today.getDate());
+  return nextweek;
+}

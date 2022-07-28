@@ -19,7 +19,10 @@ import {
   DialogActions,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+//hook
+import useUser from '../../../hooks/useUser'
 // component
+import ConfirmDialog from '../../../components/ConfirmDialog';
 import Iconify from '../../../components/Iconify';
 import Image from '../../../components/Image';
 import callApiHttp from '../../../utils/api';
@@ -310,6 +313,8 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
 
   const [open, setOpen] = useState(false);
   const [month, setMonth] = useState('1');
+  const {account} = useUser()
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
   const fetchUserDetail = async (id) => {
     return await callApiHttp({
@@ -446,8 +451,31 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
       });
   };
 
+  const handleRemoveUser = async () => {
+    try {
+      const res = await callApiHttp({
+        url: `/users/${id}`,
+        method: 'DELETE',
+      });
+      console.log(res)
+      navigate(`/dashboard/${user?.role === 'MANAGER' ? 'sellers' : 'users'}`, { replace: true });
+      toast("Xóa người dùng thành công")
+    } catch (e) {
+      console.log('e', e);
+      let errText = 'Lỗi hệ thống';
+      let err = e?.response?.data?.data;
+      if (typeof err === 'object') {
+        errText = '';
+        for (let key in err) {
+          errText += `${key} : ${err[key]} \n`;
+        }
+      }
+      toast(errText);
+    }
+  }
+
   return (
-    <Stack direction="row" spacing={5} alignItems="center" ml={-20}>
+    <Stack direction="row" spacing={5} alignItems="center">
       <Stack spacing={2} alignItems="center">
         {isMe && isEdit && (
           <LoadImage selectedFile={selectedFile} setSelectedFile={setSelectedFile} style={{ marginRight: '5%' }} />
@@ -472,7 +500,7 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
         )}
       </Stack>
       <Stack spacing={3} alignItems="center" ml={3}>
-        {isMe && !isUpdate ? (
+        {isMe && !isUpdate && (
           <Stack direction="row" alignItems="center" spacing={5} ml={-40}>
             <Button variant="contained" onClick={() => handlerCancelUpdateUser(false)}>
               Thay đổi thông tin cá nhân
@@ -481,9 +509,13 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
               Đổi mật khẩu
             </Button>
           </Stack>
-        )
-          :
-          null}
+        )}
+
+        {!isMe && account?.role === 'ADMIN' && (
+          <Button variant="contained" onClick={() => setOpenConfirmDialog(true)}>
+          Xóa người dùng
+        </Button>
+        )}
         <br />
 
         <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
@@ -653,6 +685,12 @@ export default function UserDetailForm({ id, setRole, setLink , setCheckIsMe}) {
       </Stack>
 
       <ChangePasswordDialog open={open} setOpen={setOpen}></ChangePasswordDialog>
+      <ConfirmDialog
+        open={openConfirmDialog}
+        setOpen={setOpenConfirmDialog}
+        message={`Bạn có muốn xóa người dùng ${user?.name} không?`}
+        handleConfirm={handleRemoveUser}
+      />
     </Stack>
   );
 }

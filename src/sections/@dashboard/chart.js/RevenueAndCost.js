@@ -6,8 +6,16 @@ import { Grid, Stack, Typography } from '@mui/material';
 
 import useUser from '../../../hooks/useUser';
 import BarChart from '../../../components/BarChart';
+import Combobox from '../../../components/Combobox'
 import callApiHttp from '../../../utils/api';
 import { actEnableToast, actPayment } from '../../../actions/index';
+import * as _ from '../../../constants/business';
+// utils
+import { parseMonthToInt, getAnyMonthsAgo } from '../../../utils/formatNumber';
+import { fDateTimeDay } from '../../../utils/formatTime';
+
+
+
 // ----------------------------------------------------------------------
 
 function numberWithCommas(x) {
@@ -15,6 +23,16 @@ function numberWithCommas(x) {
   var parts = x.toString().split('.');
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   return parts.join(',');
+}
+
+const getParams= (month) => {
+  const monthInt = parseMonthToInt(month)
+  if(monthInt <= 0) return {}
+  const d = getAnyMonthsAgo(monthInt)
+  const started_at_from = fDateTimeDay(d)
+  return {
+    'started_at_from': started_at_from
+  }
 }
 
 export default function RevenueAndCost() {
@@ -43,22 +61,27 @@ export default function RevenueAndCost() {
   const [totalProfit, setTotalProfit] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
 
-  const fetchRevenueAndCostByTerminal = async () => {
+  const [month, setMonth] = useState('1');
+
+  const fetchRevenueAndCostByTerminal = async (params) => {
     return await callApiHttp({
       url: `/statistic/income-terminal`,
       method: 'GET',
+      params: {...params},
     });
   };
 
-  const fetchRevenueAndCostBySeller = async () => {
+  const fetchRevenueAndCostBySeller = async (params) => {
     return await callApiHttp({
       url: `/statistic/income-seller`,
       method: 'GET',
+      params: {...params},
     });
   };
 
   useEffect(() => {
-    Promise.all([fetchRevenueAndCostByTerminal(), fetchRevenueAndCostBySeller()])
+    const params = getParams(month)
+    Promise.all([fetchRevenueAndCostByTerminal(params), fetchRevenueAndCostBySeller(params)])
       .then((res) => {
         {
           // terminal
@@ -131,7 +154,7 @@ export default function RevenueAndCost() {
         }
         toast(errText);
       });
-  }, []);
+  }, [month]);
 
   useEffect(() => {
     if (account?.role === 'MANAGER') setDisPlay(true);
@@ -139,12 +162,13 @@ export default function RevenueAndCost() {
 
   return (
     <Grid container spacing={3}>
-      <Stack>
+      <Stack direction="row" alignItems="center">
         <Typography variant="h5" component="h4" ml={3} width={300}>
           Thống kê doanh thu và chi phí
         </Typography>
+        <Combobox label={'Thời gian'} items={_.months} value={month} setValue={setMonth} />
       </Stack>
-      <Stack spacing={2} alignItems="center">
+      <Stack spacing={2} alignItems="center" mt={4}>
         <Stack direction="row" alignItems="center">
           <Typography component="h4" ml={3} width={200}>
             Tổng doanh thu

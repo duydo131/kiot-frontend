@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bar } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import {
   Chart,
   ArcElement,
@@ -53,13 +53,12 @@ Chart.register(
   Tooltip
 );
 
-export default function BarChart(props) {
-  const {chartData, nameChart, legendDisplay, width} = props
-  const displatWidth = width || '80%';
+export default function DoughnutChart(props) {
+  const {chartData, nameChart, legendDisplay} = props
 
   return (
-    <div style={{width: displatWidth, height:'auto'}}>
-      <Bar
+    <div style={{width: '40%', height:'auto'}}>
+      <Doughnut
         data={chartData}
         options={{
           plugins: {

@@ -17,7 +17,7 @@ export default function TerminalFilter({setFilter}) {
   }
 
   return (
-    <Stack direction="row" spacing={2} alignItems="center" mt={5}>
+    <Stack direction="row" spacing={2} alignItems="center" mt={5} justifyContent="flex-end">
       <TextField size="small" label="Tên gian hàng" value={name} onChange={(e) => setName(e.target.value)}/>
 
       <TextField size="small" label="Mã gian hàng" value={code} onChange={(e) => setCode(e.target.value)}/>

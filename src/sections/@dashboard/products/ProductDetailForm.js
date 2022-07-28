@@ -8,6 +8,8 @@ import { Stack, TextField, Checkbox, Typography, Link, Button } from '@mui/mater
 import { LoadingButton } from '@mui/lab';
 // component
 import Image from '../../../components/Image';
+import ConfirmDialog from '../../../components/ConfirmDialog';
+
 import callApiHttp from '../../../utils/api';
 import { actEnableToast } from '../../../actions/index';
 import LoadImage from '../../../components/LoadImage';
@@ -31,6 +33,9 @@ export default function ProductDetailForm({ id }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = (message) => dispatch(actEnableToast(message));
+
+  const { account } = useUser();
+
   const [selectedFile, setSelectedFile] = useState();
   const [isEdit, setIsEdit] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
@@ -40,7 +45,8 @@ export default function ProductDetailForm({ id }) {
     name: '',
     price: 0,
   });
-  const { account } = useUser();
+  const [open, setOpen] = useState(false);
+  const [terminal, setTerminal] = useState();
 
   const fetchProductDetail = async (id) => {
     return await callApiHttp({
@@ -49,15 +55,31 @@ export default function ProductDetailForm({ id }) {
     });
   };
 
+  const fetchTerminal = async (id) => {
+    return await callApiHttp({
+      url: `/products/terminal`,
+      method: 'GET',
+      params: {
+        id,
+      },
+    });
+  };
+
   useEffect(() => {
-    Promise.all([fetchProductDetail(id)])
+    Promise.all([fetchProductDetail(id), fetchTerminal(id)])
       .then((res) => {
-        const { data } = res[0]?.data;
-        setProduct(data);
-        setNewProduct({
-          name: data.name,
-          price: data.price,
-        });
+        {
+          const { data } = res[0]?.data;
+          setProduct(data);
+          setNewProduct({
+            name: data.name,
+            price: data.price,
+          });
+        }
+        {
+          const { data } = res[1]?.data;
+          setTerminal(data);
+        }
       })
       .catch((e) => {
         console.log('e', e);
@@ -123,17 +145,42 @@ export default function ProductDetailForm({ id }) {
         ...newProduct,
       },
     });
-  }
+  };
 
   const handleUpdateProduct = async () => {
-    Promise.all([updateProduct()]).then((res) => {
-      toast("Cập nhật thành công")
-      setIsUpdate(x => !x)
-      setFetch(x => !x)
-    }).catch((e) => {
+    Promise.all([updateProduct()])
+      .then((res) => {
+        toast('Cập nhật thành công');
+        setIsUpdate((x) => !x);
+        setFetch((x) => !x);
+      })
+      .catch((e) => {
+        console.log('e', e);
+        let err = e?.response?.data?.data;
+        let errText = 'Lỗi hệ thống';
+        if (typeof err === 'object') {
+          errText = '';
+          for (let key in err) {
+            errText += `${key} : ${err[key]} \n`;
+          }
+        }
+        toast(errText);
+      });
+  };
+
+  const handleRemoveProduct = async () => {
+    try {
+      const res = await callApiHttp({
+        url: `/products/${id}`,
+        method: 'DELETE',
+      });
+      console.log(res)
+      navigate(`/dashboard/terminals/${terminal?.id}`, { replace: true });
+      toast("Xóa sản phẩm thành công")
+    } catch (e) {
       console.log('e', e);
-      let err = e?.response?.data?.data;
       let errText = 'Lỗi hệ thống';
+      let err = e?.response?.data?.data;
       if (typeof err === 'object') {
         errText = '';
         for (let key in err) {
@@ -141,8 +188,8 @@ export default function ProductDetailForm({ id }) {
         }
       }
       toast(errText);
-    });
-  }
+    }
+  };
 
   return (
     <Stack direction="row" spacing={2} alignItems="center" ml={5} mt={5}>
@@ -150,7 +197,9 @@ export default function ProductDetailForm({ id }) {
         {isEdit && (
           <LoadImage selectedFile={selectedFile} setSelectedFile={setSelectedFile} style={{ marginRight: '5%' }} />
         )}
-        {selectedFile === undefined && <Image isProduct={true} link={product?.image} onClick={() => setIsEdit((e) => !e)} />}
+        {selectedFile === undefined && (
+          <Image isProduct={true} link={product?.image} onClick={() => setIsEdit((e) => !e)} />
+        )}
         {isEdit && (
           <Stack direction="row" alignItems="center">
             <Button variant="contained" style={{ marginRight: '5px' }} onClick={changeImageProduct}>
@@ -168,24 +217,28 @@ export default function ProductDetailForm({ id }) {
         )}
       </Stack>
       <Stack spacing={2} alignItems="center">
-        {
-          account?.role === 'MANAGER' && !isUpdate && (
-            <Stack direction="row" alignItems="center" ml={-60}>
-          <Button variant="contained" onClick={() => setIsUpdate((e) => !e)}>
-            Thay đổi thông tin sản phẩm
-          </Button>
-        </Stack>
-          )
-        }
+        {account?.role === 'MANAGER' && !isUpdate && (
+          <>
+            <Stack direction="row" spacing={5} justifyContent="flex-end">
+              <Button variant="contained" onClick={() => setIsUpdate((e) => !e)}>
+                Thay đổi thông tin sản phẩm
+              </Button>
 
-        <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
-          <Typography component="h4" ml={3} width={200}>
+              <Button variant="contained" onClick={() => setOpen(true)}>
+                Xóa sản phẩm
+              </Button>
+            </Stack>
+          </>
+        )}
+
+        <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
+          <Typography component="h4" ml={3} width={200} mt={3}>
             Tên sản phẩm
           </Typography>
           {isUpdate ? (
-            <Stack direction="row" alignItems="center" ml={3} width={300}>
+            <Stack direction="row" alignItems="center" ml={3} width={300} mt={3}>
               <TextField
-                size='small'
+                size="small"
                 label="Tên sản phẩm"
                 fullWidth
                 value={newProduct.name}
@@ -197,7 +250,7 @@ export default function ProductDetailForm({ id }) {
               />
             </Stack>
           ) : (
-            <Typography component="h4" ml={3} width={500}>
+            <Typography component="h4" ml={3} width={500} mt={3}>
               {product?.name}
             </Typography>
           )}
@@ -284,14 +337,14 @@ export default function ProductDetailForm({ id }) {
           </Typography>
         </Stack>
 
-        <Stack direction="row" alignItems="center" sx={{width: '100%'}}>
-          <Typography component="h4" ml={3} width={200} >
+        <Stack direction="row" alignItems="center" sx={{ width: '100%' }}>
+          <Typography component="h4" ml={3} width={200}>
             Giá
           </Typography>
           {isUpdate ? (
             <Stack direction="row" alignItems="center" ml={3}>
               <TextField
-                size='small'
+                size="small"
                 fullWidth
                 label="Giá"
                 value={newProduct?.price}
@@ -309,14 +362,26 @@ export default function ProductDetailForm({ id }) {
           )}
         </Stack>
         <Stack direction="row" alignItems="center">
-        {isUpdate && (
-          <Stack direction="row" alignItems="center" spacing={3}>
-            <Button variant="contained" onClick={handleUpdateProduct}> Cập nhật</Button>
-            <Button variant="contained" onClick={() => setIsUpdate(false)}> Hủy</Button>
-        </Stack>
-        )}
+          {isUpdate && (
+            <Stack direction="row" alignItems="center" spacing={3}>
+              <Button variant="contained" onClick={handleUpdateProduct}>
+                {' '}
+                Cập nhật
+              </Button>
+              <Button variant="contained" onClick={() => setIsUpdate(false)}>
+                {' '}
+                Hủy
+              </Button>
+            </Stack>
+          )}
         </Stack>
       </Stack>
+      <ConfirmDialog
+        open={open}
+        setOpen={setOpen}
+        message={`Bạn có muốn xóa sản phẩm ${product?.name} của gian hàng ${terminal?.name} không?`}
+        handleConfirm={handleRemoveProduct}
+      />
     </Stack>
   );
 }

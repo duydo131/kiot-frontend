@@ -36,17 +36,7 @@ export default function App() {
         localStorage.removeItem('token');
         navigate('/login');
       }
-    } catch (e) {
-      console.log('e', e);
-      let err = e?.response?.data?.data;
-      if (typeof err === 'object') {
-        errText = '';
-        for (let key in err) {
-          errText += `${key} : ${err[key]} \n`;
-        }
-      }
-      // toast(errText);
-    }
+    } catch (e) {}
   };
 
   useEffect(() => {

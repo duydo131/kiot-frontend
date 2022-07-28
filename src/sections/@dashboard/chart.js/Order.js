@@ -8,6 +8,8 @@ import useUser from '../../../hooks/useUser';
 import callApiHttp from '../../../utils/api';
 import { actEnableToast, actPayment } from '../../../actions/index';
 import LineChart from 'src/components/LineChart';
+import * as _ from '../../../constants/business';
+import Combobox from 'src/components/Combobox';
 // ----------------------------------------------------------------------
 
 const colors = [
@@ -19,6 +21,12 @@ const colors = [
   'rgba(85,33,71,1)',
   'rgba(36,123,233,1)',
 ];
+
+const getParams = (type) => {
+  return {
+    'time_range': type
+  }
+}
 
 export default function Order() {
   const dispatch = useDispatch();
@@ -42,22 +50,27 @@ export default function Order() {
     datasets: [],
   });
 
-  const fetchOrderStatisticByTerminal = async () => {
+  const [type, setType] = useState(7);
+
+  const fetchOrderStatisticByTerminal = async (params) => {
     return await callApiHttp({
       url: `/statistic/orders`,
       method: 'GET',
+      params: {...params}
     });
   };
 
-  const fetchOrderStatisticBySeller = async () => {
+  const fetchOrderStatisticBySeller = async (params) => {
     return await callApiHttp({
       url: `/statistic/orders-seller`,
       method: 'GET',
+      params: {...params}
     });
   };
 
   useEffect(() => {
-    Promise.all([fetchOrderStatisticByTerminal(), fetchOrderStatisticBySeller()])
+    const params = getParams(type)
+    Promise.all([fetchOrderStatisticByTerminal(params), fetchOrderStatisticBySeller(params)])
       .then((res) => {
         {
           // terminal
@@ -112,14 +125,15 @@ export default function Order() {
         }
         toast(errText);
       });
-  }, []);
+  }, [type]);
 
   return (
     <Grid container spacing={3}>
-      <Stack>
+      <Stack direction="row" alignItems="center">
         <Typography variant="h5" component="h4" ml={3} width={300}>
           Thống kê số lượng đơn hàng
         </Typography>
+        <Combobox label={'Khoảng thời gian'} items={_.ranges} value={type} setValue={setType} />
       </Stack>
       <LineChart chartData={chartData} nameChart={nameChart} legendDisplay={display} />
       <Stack></Stack>

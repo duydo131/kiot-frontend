@@ -90,12 +90,12 @@ export default function ProductFilter({ setFilter }) {
   }, []);
 
   return (
-    <Stack direction="row" spacing={2} alignItems="center" mt={5}>
+    <Stack direction="row" spacing={2} alignItems="center" mt={5} justifyContent="flex-end">
       <TextField size="small" label="Tên sản phẩm" value={name} onChange={(e) => setName(e.target.value)} />
 
       <TextField size="small" label="Sku sản phẩm" value={sku} onChange={(e) => setSku(e.target.value)} />
 
-      <Combobox label={'Gian hàng'} items={terminals} value={terminalId} setValue={setTerminalId} />
+      <Combobox label={'Gian hàng'} items={terminals} value={terminalId} setValue={setTerminalId} sx={{minWidth: 180}}/>
 
       <Combobox label={'Trạng thái'} items={active} value={isActive} setValue={setIsActive} />
 

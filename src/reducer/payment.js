@@ -1,7 +1,7 @@
 import * as Types from '../constants/ActionType';
 
 var initialState = {
-    handlerId: "",
+    handler_id: "",
     amount: 0,
     type: 'REGISTER_TERMINAL',
     payload: {}

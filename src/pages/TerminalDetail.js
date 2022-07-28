@@ -1,74 +1,62 @@
 import { Link as RouterLink, useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 // @mui
-import { styled } from '@mui/material/styles';
-import { Card, Stack, Container, Typography, Button, Link, Breadcrumbs } from '@mui/material';
+import { Stack, Container, Typography, Button, Link, Breadcrumbs } from '@mui/material';
 // hooks
-import useResponsive from '../hooks/useResponsive';
+import useUser from '../hooks/useUser';
 // components
 import Page from '../components/Page';
-import Logo from '../components/Logo';
 // sections
 import { TerminalDetailForm } from '../sections/@dashboard/terminals';
-
-// ----------------------------------------------------------------------
-
-const RootStyle = styled('div')(({ theme }) => ({
-  [theme.breakpoints.up('md')]: {
-    display: 'flex',
-  },
-}));
-
-const HeaderStyle = styled('header')(({ theme }) => ({
-  top: 0,
-  zIndex: 9,
-  lineHeight: 0,
-  width: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  position: 'absolute',
-  padding: theme.spacing(3),
-  justifyContent: 'space-between',
-  [theme.breakpoints.up('md')]: {
-    alignItems: 'flex-start',
-    padding: theme.spacing(7, 5, 0, 7),
-  },
-}));
-
-const SectionStyle = styled(Card)(({ theme }) => ({
-  width: '100%',
-  maxWidth: 464,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  margin: theme.spacing(2, 0, 2, 2),
-}));
-
-const ContentStyle = styled('div')(({ theme }) => ({
-  maxWidth: 480,
-  margin: 'auto',
-  marginTop: '-5%',
-  minHeight: '100vh',
-  display: 'flex',
-  justifyContent: 'center',
-  flexDirection: 'column',
-  padding: theme.spacing(12, 0),
-}));
+import ConfirmDialog from 'src/components/ConfirmDialog';
+import callApiHttp from '../utils/api';
+import { actEnableToast } from '../actions/index';
 
 // ----------------------------------------------------------------------
 
 export default function TerminalDetail() {
   const navigate = useNavigate();
-
-  const smUp = useResponsive('up', 'sm');
-
-  const mdUp = useResponsive('up', 'md');
+  const dispatch = useDispatch();
+  const toast = (message) => dispatch(actEnableToast(message));
 
   const { id: terminalId } = useParams();
+  const { account } = useUser();
+
   const [isEdit, setIsEdit] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [terminal, setTerminal] = useState();
+
+  const fetchTerminal = async () => {
+    try {
+      const res = await callApiHttp({
+        url: `/terminals/${terminalId}`,
+        method: 'GET',
+      });
+      setTerminal(res?.data?.data);
+    } catch (e) {
+      console.log('e', e);
+      let err = e?.response?.data?.data;
+      if (typeof err === 'object') {
+        errText = '';
+        for (let key in err) {
+          errText += `${key} : ${err[key]} \n`;
+        }
+      }
+      toast(errText);
+    }
+  };
+
+  useEffect(() => {
+    fetchTerminal();
+  }, []);
 
   const storeTerminalId = (id) => {
     localStorage.setItem('terminalId', id);
+  };
+
+  const restoreTerminalId = () => {
+    localStorage.removeItem('terminalId');
   };
 
   const handleNewProduct = () => {
@@ -85,6 +73,30 @@ export default function TerminalDetail() {
     setIsEdit(false);
   };
 
+  const handleRemoveTerminal = async () => {
+    try {
+      const res = await callApiHttp({
+        url: `/terminals/${terminalId}`,
+        method: 'DELETE',
+      });
+      console.log(res);
+      restoreTerminalId();
+      navigate('/dashboard/terminals', { replace: true });
+      toast('Xóa gian hàng thành công');
+    } catch (e) {
+      console.log('e', e);
+      let errText = 'Lỗi hệ thống';
+      let err = e?.response?.data?.data;
+      if (typeof err === 'object') {
+        errText = '';
+        for (let key in err) {
+          errText += `${key} : ${err[key]} \n`;
+        }
+      }
+      toast(errText);
+    }
+  };
+
   return (
     <Page title="Thông tin gian hàng">
       <Container>
@@ -97,25 +109,38 @@ export default function TerminalDetail() {
               Chi tiết gian hàng
             </Typography>
           </Breadcrumbs>
-          <Stack direction="row" justifyContent={'center'} mt={3}>
-            <Stack alignItems="center" ml={15} margin='0 20px 0 20px'>
-              <Button variant="contained" onClick={() => setIsEdit((e) => !e)} sx={{ width: '205px' }}>
-                Chỉnh sửa
-              </Button>
+          {account?.role === 'MANAGER' && (
+            <Stack direction="row" alignItems="center" mt={3}>
+              <Stack alignItems="center" ml={15}>
+                <Button variant="contained" onClick={() => setIsEdit((e) => !e)}>
+                  Chỉnh sửa
+                </Button>
+              </Stack>
+              <Stack alignItems="center" ml={5}>
+                <Button variant="contained" onClick={handleExtendTerminal}>
+                  Gia hạn gian hàng
+                </Button>
+              </Stack>
+              <Stack alignItems="center" ml={5}>
+                <Button variant="contained" onClick={handleNewProduct}>
+                  Thêm sản phẩm mới
+                </Button>
+              </Stack>
+              <Stack alignItems="center" ml={5}>
+                <Button variant="contained" onClick={() => setOpen(true)}>
+                  Xóa gian hàng
+                </Button>
+              </Stack>
             </Stack>
-            <Stack alignItems="center" ml={5} margin='0 20px 0 20px'>
-              <Button variant="contained" onClick={handleExtendTerminal} sx={{ width: '205px' }}>
-                Gia hạn gian hàng
-              </Button>
-            </Stack>
-            <Stack alignItems="center"  ml={5} margin='0 20px 0 20px'>
-              <Button variant="contained" onClick={handleNewProduct} sx={{ width: '205px' }}>
-                Thêm sản phẩm mới
-              </Button>
-            </Stack>
-          </Stack>
+          )}
         </Stack>
         <TerminalDetailForm id={terminalId} isEdit={isEdit} handleSaveTerminal={handleSaveTerminal} />
+        <ConfirmDialog
+          open={open}
+          setOpen={setOpen}
+          message={`Bạn có muốn xóa gian hàng ${terminal?.name} không?`}
+          handleConfirm={handleRemoveTerminal}
+        />
       </Container>
     </Page>
   );

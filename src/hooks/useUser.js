@@ -23,6 +23,7 @@ export default function useUser(dependency = []) {
     } catch (e) {
       console.log('e', e);
       let err = e?.response?.data?.data;
+      let errText = 'Lỗi hệ thống';
       if (typeof err === 'object') {
         errText = '';
         for (let key in err) {

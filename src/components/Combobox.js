@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
-export default function Combobox({label, items, value, setValue}) {
+export default function Combobox({label, items, value, setValue, sx}) {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
@@ -15,7 +15,7 @@ export default function Combobox({label, items, value, setValue}) {
   }
 
   return (
-    <Box sx={{ minWidth: 120 }}>
+    <Box sx={{ minWidth: 120, ...sx }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">{label}</InputLabel>
         <Select

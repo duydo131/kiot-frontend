@@ -8,7 +8,7 @@ import { Box, List, Collapse, ListItemText, ListItemIcon, ListItemButton } from 
 //
 import Iconify from './Iconify';
 import { actLogout } from './../actions/index';
-import LogoutDialog from './../components/LogoutDialog';
+import ConfirmDialog from './ConfirmDialog';
 
 // ----------------------------------------------------------------------
 
@@ -39,8 +39,7 @@ NavItem.propTypes = {
 
 function NavItem({ item, active, setOpenLogout }) {
   const theme = useTheme();
-  const dispatch = useDispatch();
-  const logout = () => dispatch(actLogout());
+  const { pathname } = useLocation();
 
   const isActiveRoot = active(item.path);
 
@@ -133,7 +132,7 @@ function NavItem({ item, active, setOpenLogout }) {
     <ListItemStyle
       onClick={handleLogout}
       component={RouterLink}
-      to={id !== 10 ? path : ''}
+      to={id !== 10 ? path : pathname}
       sx={{
         ...(isActiveRoot && activeRootStyle),
       }}
@@ -151,6 +150,10 @@ NavSection.propTypes = {
 
 export default function NavSection({ navConfig, ...other }) {
   const isSuperUser = useSelector((state) => state.auth.isSuperUser);
+
+  const dispatch = useDispatch();
+  const logout = () => dispatch(actLogout());
+
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
 
@@ -168,7 +171,7 @@ export default function NavSection({ navConfig, ...other }) {
         </List>
       </Box>
 
-      <LogoutDialog open={open} setOpen={setOpen} />
+      <ConfirmDialog open={open} setOpen={setOpen} message={'Bạn có muốn đăng xuất không?'} handleConfirm={logout} />
     </>
   );
 }

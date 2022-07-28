@@ -146,7 +146,7 @@ export default function TerminalCreateForm() {
             label="Số ngày mở"
             {...getFieldProps('time_selling')}
             error={Boolean(touched.time_selling && errors.time_selling)}
-            helperText={touched.time_selling && errors.time_selling}
+            // helperText={touched.time_selling && errors.time_selling}
           />
 
           <TextField
