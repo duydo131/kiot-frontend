@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 // material
 import { Link } from '@mui/material';
-// import ShopProductCard from './ProductCard';
 import DataTable from '../../../components/Table';
 // ----------------------------------------------------------------------
 

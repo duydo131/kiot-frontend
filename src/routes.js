@@ -3,7 +3,6 @@ import { Navigate, useRoutes, Route } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
-import Blog from './pages/Blog';
 import User from './pages/User';
 import UserDetail from './pages/UserDetail';
 import Login from './pages/Login';

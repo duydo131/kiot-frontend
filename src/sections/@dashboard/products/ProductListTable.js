@@ -1,16 +1,10 @@
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
-import PropTypes from 'prop-types';
 // material
 import { Link } from '@mui/material';
-// import ShopProductCard from './ProductCard';
 import DataTable from '../../../components/Table';
 // ----------------------------------------------------------------------
 
-function formatDate(value) {
-  let d = new Date(value);
-  return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
-}
 
 export default function ProductListTable({ products, ...other }) {
   const columns = [

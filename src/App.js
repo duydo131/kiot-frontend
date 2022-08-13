@@ -2,7 +2,6 @@
 import Router from './routes';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // theme
 import ThemeProvider from './theme';
@@ -13,8 +12,6 @@ import { BaseOptionChartStyle } from './components/chart/BaseOptionChart';
 import Toast from './components/toast/Toast';
 
 import callApiHttp from './utils/api';
-// action
-import { actEnableToast } from './actions/index';
 
 // ----------------------------------------------------------------------
 
@@ -22,8 +19,6 @@ export default function App() {
   const isLoggedIn = useSelector((state) => state.auth.login);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const toast = (message) => dispatch(actEnableToast(message));
 
   const checkCurrentUser = async () => {
     try {

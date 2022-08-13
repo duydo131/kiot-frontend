@@ -6,7 +6,6 @@ import download from 'downloadjs';
 import PropTypes from 'prop-types';
 // material
 import { Link, Typography } from '@mui/material';
-// import ShopProductCard from './ProductCard';
 import DataTable from '../../../components/Table';
 // ----------------------------------------------------------------------
 

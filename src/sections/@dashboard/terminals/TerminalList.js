@@ -3,7 +3,6 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // material
 import { Link } from '@mui/material';
-// import ShopProductCard from './ProductCard';
 import DataTable from '../../../components/Table';
 // ----------------------------------------------------------------------
 
