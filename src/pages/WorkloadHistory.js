@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 
 // @mui
 import { styled } from '@mui/material/styles';
-import { Card, Stack, Container, Typography, Breadcrumbs, Link } from '@mui/material';
+import { Card, Stack, Container, Typography, Breadcrumbs, Link, Button } from '@mui/material';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -64,6 +64,7 @@ export default function WorkloadHistoryDetail() {
   const mdUp = useResponsive('up', 'md');
 
   const [workloads, setWorkloads] = useState([]);
+  const [fetch, setFetch] = useState(false)
 
   const fetchWorkloads = async () => {
     try {
@@ -89,7 +90,7 @@ export default function WorkloadHistoryDetail() {
 
   useEffect(() => {
     fetchWorkloads();
-  }, []);
+  }, [fetch]);
 
   return (
     <Page title="Lịch sử Import">
@@ -109,6 +110,11 @@ export default function WorkloadHistoryDetail() {
               Thông tin import sản phẩm
             </Typography>
           </Breadcrumbs>
+        </Stack>
+        <Stack direction="row" alignItems="center" justifyContent="flex-end" mt={5}>
+        <Button variant="contained" onClick = {() => setFetch(f => !f)} >
+          Reload
+        </Button>
         </Stack>
         <WorkloadHistoryList workloads={workloads} />
       </Container>

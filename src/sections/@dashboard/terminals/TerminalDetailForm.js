@@ -217,7 +217,7 @@ export default function TerminalDetailForm({ id, isEdit, handleSaveTerminal }) {
           Thời gian mở cửa đầu tiên
         </Typography>
         <Typography component="h5" ml={3} width={500}>
-          {formatDate(terminal?.time_register)}
+          {formatDate(terminal?.time_open)}
         </Typography>
       </Stack>
 

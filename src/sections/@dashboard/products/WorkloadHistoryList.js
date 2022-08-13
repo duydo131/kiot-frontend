@@ -37,7 +37,7 @@ export default function WorkloadHistoryList({ workloads }) {
   }
 
   const columns = [
-    { field: 'email', headerName: 'Email', width: 170, headerAlign: 'center', align: 'center', },
+    { field: 'email', headerName: 'Email', width: 170, headerAlign: 'center', align: 'center' },
     {
       field: 'source_file',
       headerName: 'File nguồn',
@@ -81,19 +81,25 @@ export default function WorkloadHistoryList({ workloads }) {
       width: 100,
       headerAlign: 'center',
       align: 'center',
-      renderCell: (params) => (
-        <Typography
-          width={190}
-          style={{
-            color: 'blue',
-            cursor: 'pointer',
-            textDecoration: 'underline',
-          }}
-          onClick={() => openTab(params.row.result_file || params.row.source_file)}
-        >
-          Tải tại đây
-        </Typography>
-      ),
+      renderCell: (params) => {
+        const status = params.row.status;
+        const isDone = status === 'SUCCESS' || status === 'FAIL';
+        return isDone ? (
+          <Typography
+            width={190}
+            style={{
+              color: 'blue',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+            }}
+            onClick={() => openTab(params.row.result_file || params.row.source_file)}
+          >
+            Tải tại đây
+          </Typography>
+        ) : (
+          <Typography width={190}></Typography>
+        );
+      },
     },
     {
       field: 'status',
